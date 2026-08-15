@@ -1,0 +1,76 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Co Chien River Branch", "estuary": "Cung Hầu" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [105.950, 10.320],
+          [106.120, 10.200],
+          [106.280, 10.080],
+          [106.353, 9.945],
+          [106.505, 9.878]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Ham Luong River Branch", "estuary": "Hàm Luông" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [105.950, 10.350],
+          [106.120, 10.320],
+          [106.215, 10.298],
+          [106.338, 10.252],
+          [106.528, 10.015],
+          [106.633, 9.920]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "My Tho River Branch", "estuary": "Cửa Tiểu / Cửa Đại" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [105.950, 10.450],
+          [106.012, 10.428],
+          [106.289, 10.365],
+          [106.600, 10.280],
+          [106.750, 10.220]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Hau River Branch", "estuary": "Trần Đề / Định An" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [105.122, 10.708],
+          [105.450, 10.350],
+          [105.785, 10.032],
+          [105.975, 9.602],
+          [106.225, 9.488],
+          [106.380, 9.420]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Cai Lon River Branch", "estuary": "Rạch Giá" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [105.420, 9.720],
+          [105.250, 9.850],
+          [105.082, 9.982],
+          [104.980, 10.020]
+        ]
+      }
+    }
+  ]
+}

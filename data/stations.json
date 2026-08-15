@@ -1,0 +1,213 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [106.353, 9.945] },
+      "properties": {
+        "id": "ST01",
+        "name": "Trà Vinh Station",
+        "river": "Cổ Chiên River",
+        "province": "Trà Vinh",
+        "distance_inland_km": 28,
+        "base_salinity": 4.5,
+        "critical_threshold": 4.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [106.302, 9.992] },
+      "properties": {
+        "id": "ST02",
+        "name": "Hùng Mỹ Station",
+        "river": "Cổ Chiên River",
+        "province": "Trà Vinh",
+        "distance_inland_km": 35,
+        "base_salinity": 3.8,
+        "critical_threshold": 4.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [106.505, 9.878] },
+      "properties": {
+        "id": "ST03",
+        "name": "Cung Hầu Estuary",
+        "river": "Cổ Chiên River",
+        "province": "Trà Vinh",
+        "distance_inland_km": 10,
+        "base_salinity": 12.4,
+        "critical_threshold": 4.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [106.338, 10.252] },
+      "properties": {
+        "id": "ST04",
+        "name": "Bến Tre Station",
+        "river": "Hàm Luông River",
+        "province": "Bến Tre",
+        "distance_inland_km": 42,
+        "base_salinity": 2.9,
+        "critical_threshold": 1.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [106.633, 10.052] },
+      "properties": {
+        "id": "ST05",
+        "name": "Bình Đại Station",
+        "river": "Cổ Chiên / Ham Luong Estuary",
+        "province": "Bến Tre",
+        "distance_inland_km": 8,
+        "base_salinity": 14.8,
+        "critical_threshold": 4.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [106.215, 10.298] },
+      "properties": {
+        "id": "ST06",
+        "name": "Chợ Lách Station",
+        "river": "Hàm Luông River",
+        "province": "Bến Tre",
+        "distance_inland_km": 68,
+        "base_salinity": 0.8,
+        "critical_threshold": 1.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [106.528, 10.015] },
+      "properties": {
+        "id": "ST07",
+        "name": "An Thuận Station",
+        "river": "Hàm Luông River",
+        "province": "Bến Tre",
+        "distance_inland_km": 18,
+        "base_salinity": 8.6,
+        "critical_threshold": 4.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [106.012, 10.428] },
+      "properties": {
+        "id": "ST08",
+        "name": "Mỹ Tho Station",
+        "river": "Mỹ Tho River (Sông Tiền)",
+        "province": "Tiền Giang",
+        "distance_inland_km": 48,
+        "base_salinity": 1.9,
+        "critical_threshold": 1.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [106.289, 10.365] },
+      "properties": {
+        "id": "ST09",
+        "name": "Giao Hòa Station",
+        "river": "Mỹ Tho River",
+        "province": "Bến Tre",
+        "distance_inland_km": 38,
+        "base_salinity": 3.2,
+        "critical_threshold": 1.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [105.975, 9.602] },
+      "properties": {
+        "id": "ST10",
+        "name": "Đại Ngãi Station",
+        "river": "Sông Hậu (Hậu River)",
+        "province": "Sóc Trăng",
+        "distance_inland_km": 32,
+        "base_salinity": 3.5,
+        "critical_threshold": 4.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [106.225, 9.488] },
+      "properties": {
+        "id": "ST11",
+        "name": "Trần Đề Estuary",
+        "river": "Sông Hậu",
+        "province": "Sóc Trăng",
+        "distance_inland_km": 8,
+        "base_salinity": 15.2,
+        "critical_threshold": 4.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [105.785, 10.032] },
+      "properties": {
+        "id": "ST12",
+        "name": "Cần Thơ Station",
+        "river": "Sông Hậu",
+        "province": "Cần Thơ",
+        "distance_inland_km": 82,
+        "base_salinity": 0.1,
+        "critical_threshold": 1.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [105.148, 10.702] },
+      "properties": {
+        "id": "ST13",
+        "name": "Tân Châu Main Station",
+        "river": "Sông Tiền",
+        "province": "An Giang",
+        "distance_inland_km": 190,
+        "base_salinity": 0.05,
+        "critical_threshold": 1.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [105.122, 10.708] },
+      "properties": {
+        "id": "ST14",
+        "name": "Châu Đốc Main Station",
+        "river": "Sông Hậu",
+        "province": "An Giang",
+        "distance_inland_km": 195,
+        "base_salinity": 0.05,
+        "critical_threshold": 1.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [105.485, 9.288] },
+      "properties": {
+        "id": "ST15",
+        "name": "Bạc Liêu Station",
+        "river": "Gành Hào Canal",
+        "province": "Bạc Liêu",
+        "distance_inland_km": 15,
+        "base_salinity": 11.5,
+        "critical_threshold": 4.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [105.082, 9.982] },
+      "properties": {
+        "id": "ST16",
+        "name": "Rạch Giá Gate",
+        "river": "Cái Lớn River",
+        "province": "Kiên Giang",
+        "distance_inland_km": 5,
+        "base_salinity": 16.8,
+        "critical_threshold": 4.0
+      }
+    }
+  ]
+}

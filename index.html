@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mekong Delta GeoAI Salinity Intrusion Forecasting Engine</title>
+  
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome & Leaflet CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+
+  <!-- Header Bar -->
+  <header class="app-header">
+    <div class="brand-title">
+      <div class="brand-icon">
+        <i class="fa-solid fa-water-waves"></i>
+      </div>
+      <div>
+        <h1>Mekong Delta GeoAI</h1>
+        <span class="sub-title">Salinity Intrusion Early Warning & Hydrodynamic Engine</span>
+      </div>
+    </div>
+
+    <div class="header-status">
+      <div class="status-badge live-status">
+        <span class="pulse-dot"></span> Real-Time Ingestion Active
+      </div>
+      <div class="status-badge model-badge">
+        <i class="fa-solid fa-brain"></i> XGBoost + LSTM Hybrid
+      </div>
+      <button id="refresh-data-btn" class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-rotate-right"></i> Refresh APIs
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Workspace Grid -->
+  <main class="app-grid">
+    
+    <!-- Left Sidebar: Analytics & Controls -->
+    <aside class="app-sidebar">
+      
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card danger">
+          <div class="kpi-icon"><i class="fa-solid fa-vial-virus"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Peak Salinity</span>
+            <span class="kpi-value" id="kpi-peak-salinity">14.8 <small>g/L</small></span>
+            <span class="kpi-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +2.4 vs 7-day avg</span>
+          </div>
+        </div>
+
+        <div class="kpi-card info">
+          <div class="kpi-icon"><i class="fa-solid fa-water"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Upstream Q Flow (Tân Châu)</span>
+            <span class="kpi-value" id="kpi-discharge">1,850 <small>m³/s</small></span>
+            <span class="kpi-sub">Critical Threshold: &lt; 2,000 m³/s</span>
+          </div>
+        </div>
+
+        <div class="kpi-card warning">
+          <div class="kpi-icon"><i class="fa-solid fa-arrows-up-to-line"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Vũng Tàu High Tide</span>
+            <span class="kpi-value" id="kpi-tide">3.85 <small>m</small></span>
+            <span class="kpi-sub">Biển Đông High Tide Surge</span>
+          </div>
+        </div>
+
+        <div class="kpi-card physics">
+          <div class="kpi-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+          <div class="kpi-info">
+            <span class="kpi-label">Momentum Ratio R_M</span>
+            <span class="kpi-value" id="kpi-rm">0.480 <small>Q/H</small></span>
+            <span class="kpi-sub">Tide Momentum Dominating</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sluice Gate Control & Operational Alerts -->
+      <section class="panel alert-panel">
+        <div class="panel-header">
+          <h3><i class="fa-solid fa-shield-cat"></i> Gate Control & Farmer Alerts</h3>
+          <span class="badge badge-danger" id="alert-count">3 Active</span>
+        </div>
+        <div class="alert-list" id="alert-list-container">
+          <!-- Dynamic alerts loaded via JS -->
+        </div>
+      </section>
+
+      <!-- Historical Timeline Playback (2024 Drought) -->
+      <section class="panel timeline-panel">
+        <div class="panel-header">
+          <h3><i class="fa-solid fa-clock-rotate-left"></i> 2024 Dry Season Playback</h3>
+        </div>
+        <div class="timeline-controls">
+          <button id="play-pause-btn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-play"></i> Play</button>
+          <input type="range" id="timeline-slider" min="0" max="150" value="75" step="1">
+          <span id="timeline-date-display" class="timeline-date">2024-03-15</span>
+        </div>
+      </section>
+
+      <!-- Station Salinity Leaderboard -->
+      <section class="panel leaderboard-panel">
+        <div class="panel-header">
+          <h3><i class="fa-solid fa-list-ol"></i> Station Risk Ranking</h3>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table" id="station-table">
+            <thead>
+              <tr>
+                <th>Station</th>
+                <th>River Branch</th>
+                <th>Current</th>
+                <th>+3D Forecast</th>
+              </tr>
+            </thead>
+            <tbody id="station-table-body">
+              <!-- Loaded via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </aside>
+
+    <!-- Main Map Viewport -->
+    <div class="map-viewport">
+      
+      <!-- Viewport Map Controls Toolbar -->
+      <div class="map-toolbar">
+        <div class="tool-group">
+          <button id="btn-layer-estuary" class="tool-btn active"><i class="fa-solid fa-route"></i> River Estuaries</button>
+          <button id="btn-layer-satellite" class="tool-btn"><i class="fa-solid fa-satellite"></i> Satellite Canals (10m)</button>
+          <button id="btn-layer-heatmap" class="tool-btn"><i class="fa-solid fa-fire"></i> Interpolated Gradient</button>
+        </div>
+
+        <div class="tool-group">
+          <select id="province-filter" class="custom-select">
+            <option value="ALL">All Provinces (VMD)</option>
+            <option value="Trà Vinh">Trà Vinh</option>
+            <option value="Bến Tre">Bến Tre</option>
+            <option value="Tiền Giang">Tiền Giang</option>
+            <option value="Sóc Trăng">Sóc Trăng</option>
+            <option value="Kiên Giang">Kiên Giang</option>
+          </select>
+        </div>
+
+        <div class="tool-group legend-inline">
+          <span class="legend-item safe"><span class="color-box"></span> &lt; 1.0 g/L (Fresh)</span>
+          <span class="legend-item warn"><span class="color-box"></span> 1.0 - 4.0 g/L (Drinking Warning)</span>
+          <span class="legend-item danger"><span class="color-box"></span> &gt; 4.0 g/L (Gate Shutdown)</span>
+        </div>
+      </div>
+
+      <!-- Leaflet Map Container -->
+      <div id="map"></div>
+
+      <!-- Hydraulic "What-If" Scenario Simulator Modal Overlay -->
+      <div class="scenario-drawer collapsed" id="scenario-drawer">
+        <div class="drawer-header" id="drawer-toggle-btn">
+          <h4><i class="fa-solid fa-sliders"></i> "What-If" Hydraulic Scenario Simulator (Eslami et al. Equations)</h4>
+          <i class="fa-solid fa-chevron-up toggle-icon"></i>
+        </div>
+        <div class="drawer-body">
+          <div class="slider-grid">
+            
+            <div class="slider-group">
+              <label>Upstream Flow Q ($m^3/s$): <span id="val-sim-q" class="slider-val">1,800 m³/s</span></label>
+              <input type="range" id="sim-q-slider" min="800" max="4500" value="1800" step="50">
+              <small class="slider-hint">Simulate Dam Releases / Severe Drought (&lt;2000m³/s triggers salt surge)</small>
+            </div>
+
+            <div class="slider-group">
+              <label>Vũng Tàu Tide Height H ($m$): <span id="val-sim-h" class="slider-val">3.8 m</span></label>
+              <input type="range" id="sim-h-slider" min="1.5" max="4.8" value="3.8" step="0.1">
+              <small class="slider-hint">Simulate Biển Đông Ocean Spring Tide / Storm Surges</small>
+            </div>
+
+            <div class="slider-group">
+              <label>Riverbed Sand Mining Channel Deepening ($m$): <span id="val-sim-incision" class="slider-val">2.0 m</span></label>
+              <input type="range" id="sim-incision-slider" min="0.0" max="3.5" value="2.0" step="0.5">
+              <small class="slider-hint">Simulate Channel Incision & Hydraulic Friction Drop (2-3m historical deepening)</small>
+            </div>
+
+          </div>
+
+          <div class="simulator-results">
+            <div class="sim-result-card">
+              <span>Calculated Momentum Ratio R_M</span>
+              <strong id="sim-res-rm">0.473</strong>
+            </div>
+            <div class="sim-result-card">
+              <span>Salt Intrusion Penetration Distance</span>
+              <strong id="sim-res-distance">68.5 km inland</strong>
+            </div>
+            <div class="sim-result-card danger">
+              <span>Affected Agricultural Land</span>
+              <strong id="sim-res-area">184,500 ha</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Panel: Forecasting Charts & Model Metrics -->
+    <aside class="app-forecast-panel">
+      <div class="panel-header">
+        <h3><i class="fa-solid fa-chart-line"></i> Station Salinity Forecast Trajectory</h3>
+        <div class="horizon-toggle">
+          <button class="btn-hz active" data-hz="1">t+1D</button>
+          <button class="btn-hz" data-hz="3">t+3D</button>
+          <button class="btn-hz" data-hz="7">t+7D</button>
+        </div>
+      </div>
+
+      <div class="station-meta-bar">
+        <div class="selected-station-info">
+          <h4 id="chart-station-name">Trà Vinh Station (Cổ Chiên River)</h4>
+          <span class="sub-text" id="chart-station-sub">Distance from sea: 28 km | Province: Trà Vinh</span>
+        </div>
+      </div>
+
+      <!-- Time Series Chart Canvas -->
+      <div class="chart-wrapper">
+        <canvas id="salinityForecastChart"></canvas>
+      </div>
+
+      <!-- Model Performance & Physics Feature Importance -->
+      <div class="model-metrics-card">
+        <h4><i class="fa-solid fa-microchip"></i> Model Validation Metrics (Le et al. 2026 Baseline)</h4>
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <span>R² Accuracy Score</span>
+            <strong>0.884</strong>
+          </div>
+          <div class="metric-item">
+            <span>NSE Efficiency</span>
+            <strong>0.862</strong>
+          </div>
+          <div class="metric-item">
+            <span>MAE Error</span>
+            <strong>0.38 g/L</strong>
+          </div>
+          <div class="metric-item">
+            <span>RMSE</span>
+            <strong>0.46 g/L</strong>
+          </div>
+        </div>
+
+        <h5 class="feature-title"><i class="fa-solid fa-diagram-project"></i> Feature Importance Breakdown</h5>
+        <div class="feature-bars">
+          <div class="feat-row">
+            <span>Momentum Ratio R_M (Q/H)</span>
+            <div class="progress-bar"><div class="fill" style="width: 71.9%"></div></div>
+            <span>71.9%</span>
+          </div>
+          <div class="feat-row">
+            <span>Lag Salinity S(t-1)</span>
+            <div class="progress-bar"><div class="fill" style="width: 12.4%"></div></div>
+            <span>12.4%</span>
+          </div>
+          <div class="feat-row">
+            <span>Wind Speed Vector (10m)</span>
+            <div class="progress-bar"><div class="fill" style="width: 8.5%"></div></div>
+            <span>8.5%</span>
+          </div>
+          <div class="feat-row">
+            <span>Precipitation (mm)</span>
+            <div class="progress-bar"><div class="fill" style="width: 7.2%"></div></div>
+            <span>7.2%</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- Leaflet & JS Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/physics.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
