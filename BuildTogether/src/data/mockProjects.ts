@@ -1,28 +1,336 @@
-import { Project, CurrentUser } from '../types';
+import { Project, CurrentUser, ProjectCategory } from '../types';
 
 export const initialCurrentUser: CurrentUser = {
-  name: 'Nam Lê',
-  handle: '@namle',
+  name: 'Alex Mercer',
+  handle: '@alexmercer',
   avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-  primaryRole: 'Backend & ML Systems',
-  skills: ['Python', 'FastAPI', 'PyTorch', 'Go', 'PostgreSQL', 'Redis', 'Docker'],
-  availableHoursPerWeek: 8,
-  bio: 'Building distributed pipelines and ML backend microservices. Looking for frontend/design co-builders.',
-  github: 'https://github.com/namle-dev',
+  primaryRole: 'Campaign Strategist & Fullstack Builder',
+  skills: ['Python', 'React', 'Campaign Strategy', 'Environmental Policy', 'UX Design', 'Community Outreach'],
+  availableHoursPerWeek: 10,
+  bio: 'Passionate about building tech-enabled social initiatives, environmental campaigns, and collaborative open tools.',
+  github: 'https://github.com/alexmercer-dev',
   claimedRoleIds: [],
   claimedIssueIds: [],
-  bookmarkedProjectIds: ['project-1', 'project-2'],
+  bookmarkedProjectIds: ['project-eco-1', 'project-tech-1'],
 };
+
+export const allCategories: ProjectCategory[] = [
+  'Tech & AI',
+  'Environment & Eco',
+  'Campaign & Marketing',
+  'Community & Social',
+  'Creative & Design',
+  'Business & Strategy',
+];
+
+export const allTags = [
+  'React', 'Python', 'FastAPI', 'PyTorch', 'Sustainability', 
+  'Social Impact', 'Campaign Strategy', 'Copywriting', 'UX Design', 
+  'Community Outreach', 'Graphic Design', 'Growth Hacking', 'Docker',
+  'PostgreSQL', 'Tailwind', 'Video Editing', 'Legal/Policy'
+];
 
 export const mockProjects: Project[] = [
   {
-    id: 'project-1',
+    id: 'project-eco-1',
+    title: 'EcoPulse: Ocean Plastic Action Network',
+    tagline: 'AI-driven coastal pollution mapping & localized volunteer mobilization campaign.',
+    description: 'Combining satellite imagery AI analysis with grassroots community campaigns to clean up coastal plastic hotspots. We need environmental strategists, campaign coordinators, and frontend UI designers to launch our nationwide campaign.',
+    category: 'Environment & Eco',
+    stage: 'Scaffolding',
+    stageProgress: 60,
+    techStack: ['Sustainability', 'Campaign Strategy', 'Python', 'React', 'Community Outreach', 'UX Design'],
+    creator: {
+      name: 'Maya Lin',
+      handle: '@mayalin_eco',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+      role: 'Environmental Policy Lead',
+      verified: true,
+      github: 'mayalin-climate',
+    },
+    teamMembers: [
+      {
+        name: 'Maya Lin',
+        handle: '@mayalin_eco',
+        avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+        role: 'Environmental Policy Lead',
+      },
+      {
+        name: 'David Kim',
+        handle: '@dkim_gis',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+        role: 'GIS & Satellite Data Analyst',
+      }
+    ],
+    maxTeamSize: 6,
+    stars: 128,
+    views: 890,
+    postedAt: '1 hour ago',
+    matchScore: 96,
+    matchReason: 'High synergy with your Environmental Policy & Campaign Strategy skills.',
+    discordInviteUrl: 'https://discord.gg/ecopulse-action',
+    repoCloneCommand: 'git clone https://github.com/ecopulse/coastal-action.git',
+    roleSlots: [
+      {
+        id: 'eco-role-1',
+        title: 'Grassroots Campaign Lead (Open)',
+        category: 'campaign-lead',
+        status: 'open',
+        commitmentHours: 8,
+        requirements: ['Community mobilization experience', 'Social media outreach', 'Event planning'],
+        responsibilities: ['Coordinate weekend coastal cleanup drives', 'Partner with local eco-NGOs', 'Manage volunteer leaderboard'],
+      },
+      {
+        id: 'eco-role-2',
+        title: 'UI/UX Impact Designer (Open)',
+        category: 'design',
+        status: 'open',
+        commitmentHours: 6,
+        requirements: ['Figma', 'Responsive UI design', 'Data visualization'],
+        responsibilities: ['Design mobile-first map interface for pollution reporting', 'Create impact dashboard'],
+      },
+      {
+        id: 'eco-role-3',
+        title: 'Environmental Scientist / Auditor (Open)',
+        category: 'environment-expert',
+        status: 'open',
+        commitmentHours: 5,
+        requirements: ['Marine biology or Eco science background', 'Plastic footprint metrics'],
+        responsibilities: ['Audit collected trash metrics', 'Verify recycling supply chain tracking'],
+      }
+    ],
+    firstGoodIssue: {
+      id: 'task-eco-1',
+      title: 'Design volunteer onboarding & signup flow card',
+      category: 'Design & UX',
+      difficulty: 'Quick Win (~30m)',
+      estimatedMinutes: 30,
+      summary: 'Craft a 3-step signup wizard UI for local ocean cleanup volunteers.',
+      acceptanceCriteria: ['Form fields for location, available weekends, equipment', 'Confirmation badge component'],
+      status: 'open',
+      priority: 'high',
+    },
+    tasks: [
+      {
+        id: 'task-eco-1',
+        title: 'Design volunteer onboarding & signup flow card',
+        category: 'Design & UX',
+        difficulty: 'Quick Win (~30m)',
+        estimatedMinutes: 30,
+        summary: 'Craft a 3-step signup wizard UI for local ocean cleanup volunteers.',
+        acceptanceCriteria: ['Form fields for location, available weekends, equipment', 'Confirmation badge component'],
+        status: 'open',
+        priority: 'high',
+      },
+      {
+        id: 'task-eco-2',
+        title: 'Integrate OpenStreetMap GPS coordinates for cleanup sites',
+        category: 'Development',
+        difficulty: 'Moderate (~1-2h)',
+        estimatedMinutes: 90,
+        summary: 'Connect cleanup target database to interactive map pins with live progress markers.',
+        acceptanceCriteria: ['Render interactive Leaflet/Mapbox pins', 'Filter by cleanup urgency level'],
+        status: 'claimed',
+        assignedTo: 'David Kim',
+        assignedAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+        priority: 'medium',
+      },
+      {
+        id: 'task-eco-3',
+        title: 'Draft press kit & social media launch templates',
+        category: 'Campaign',
+        difficulty: 'Quick Win (~30m)',
+        estimatedMinutes: 45,
+        summary: 'Create shareable templates for Instagram, LinkedIn, and Twitter campaign push.',
+        acceptanceCriteria: ['3 graphic banner presets', 'Sample copy for ambassador recruitment'],
+        status: 'completed',
+        assignedTo: 'Maya Lin',
+        assignedAvatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+        priority: 'high',
+      }
+    ],
+    milestones: [
+      { id: 'm-eco-1', title: 'Pollution Satellite Model Training & Hotspot Detection', stage: 'Blueprint / Spec', status: 'completed', owner: 'David Kim' },
+      { id: 'm-eco-2', title: 'Community Launch & First 1,000 Volunteers', stage: 'Scaffolding', status: 'in_progress', owner: 'Maya Lin', eta: 'Next 2 Weeks' },
+      { id: 'm-eco-3', title: 'Deploy Live Cleanup Tracking App in 5 Coastal Cities', stage: 'Alpha / MVP Live', status: 'upcoming' },
+      { id: 'm-eco-4', title: 'National Media Campaign & Corporate Sponsorship', stage: 'Ship & Distribute', status: 'upcoming' },
+    ],
+    architecture: {
+      summary: 'Hybrid campaign infrastructure combining Python PyTorch satellite image classifier backend with React interactive web dashboard and mobile volunteer tracking interface.',
+      backendStack: 'Python 3.11, FastAPI, PyTorch (YOLOv8 Satellite), PostgreSQL/PostGIS',
+      frontendStack: 'React 19, Tailwind CSS, Leaflet/Mapbox GL',
+      infraStack: 'AWS S3, Supabase, Cloudflare Workers',
+      figmaUrl: 'https://figma.com/file/ecopulse-ux',
+      githubUrl: 'https://github.com/ecopulse/coastal-action',
+      campaignDeckUrl: 'https://canva.com/deck/ecopulse-ocean-deck',
+      communityUrl: 'https://discord.gg/ecopulse-action',
+    },
+    workspaceResources: [
+      { id: 'res-1', title: 'Coastal Action Campaign Deck', type: 'deck', url: 'https://canva.com/deck/ecopulse-ocean-deck', description: 'Pitch deck for eco-sponsors and NGO partners', addedBy: 'Maya Lin', addedAt: '2 days ago' },
+      { id: 'res-2', title: 'Figma Mobile App Wireframes', type: 'figma', url: 'https://figma.com/file/ecopulse-ux', description: 'Interactive prototypes for volunteer check-ins', addedBy: 'David Kim', addedAt: 'Yesterday' },
+      { id: 'res-3', title: 'GitHub Repository', type: 'github', url: 'https://github.com/ecopulse/coastal-action', description: 'Main codebase for map & backend', addedBy: 'David Kim', addedAt: '3 days ago' },
+    ],
+    workspaceActivities: [
+      { id: 'act-1', user: 'Maya Lin', userAvatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80', action: 'completed task', target: 'Draft press kit & social media templates', timestamp: '10m ago', type: 'task' },
+      { id: 'act-2', user: 'David Kim', userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', action: 'claimed task', target: 'Integrate OpenStreetMap GPS coordinates', timestamp: '1h ago', type: 'task' },
+      { id: 'act-3', user: 'AI Architect', userAvatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=ecopulse', action: 'recommended role', target: 'Grassroots Campaign Lead', timestamp: '3h ago', type: 'ai' },
+    ],
+    aiSkillRecommendations: [
+      {
+        roleTitle: 'Grassroots Campaign Lead',
+        category: 'campaign-lead',
+        reason: 'Essential for driving local community signups and managing coastal cleanup event schedules.',
+        suggestedSkills: ['Community Outreach', 'Social Media Marketing', 'Event Coordination'],
+        potentialCandidates: [
+          { name: 'Sarah Jenkins', handle: '@sjenkins_outreach', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80', role: 'Community Organizer', location: 'Seattle, WA', matchScore: 94 },
+          { name: 'Marcus Vance', handle: '@marcus_campaigns', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', role: 'Eco Growth Marketer', location: 'San Francisco, CA', matchScore: 89 },
+        ]
+      },
+      {
+        roleTitle: 'UI/UX Impact Designer',
+        category: 'design',
+        reason: 'Needed to simplify pollution logging form so volunteers can report plastic in under 15 seconds.',
+        suggestedSkills: ['Figma', 'Mobile UI', 'Visual Storytelling'],
+        potentialCandidates: [
+          { name: 'Chloe Zhang', handle: '@chloez_design', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', role: 'Product Designer', location: 'Vancouver, CA', matchScore: 91 },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'project-camp-1',
+    title: 'ZeroWaste Viral: GenZ Eco Campaign',
+    tagline: 'Multi-channel social campaign turning single-use plastic reduction into viral TikTok/Reels challenges.',
+    description: 'We are creating a high-energy, youth-led campaign to challenge fast food chains to adopt reusable packaging. We need creative copywriters, short-form video editors, and viral marketing strategists to execute Phase 1.',
+    category: 'Campaign & Marketing',
+    stage: 'Blueprint / Spec',
+    stageProgress: 35,
+    techStack: ['Campaign Strategy', 'Copywriting', 'Video Editing', 'Growth Hacking', 'Graphic Design'],
+    creator: {
+      name: 'Jordan Brooks',
+      handle: '@jordan_viral',
+      avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80',
+      role: 'Creative Campaign Director',
+      verified: true,
+    },
+    teamMembers: [
+      {
+        name: 'Jordan Brooks',
+        handle: '@jordan_viral',
+        avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80',
+        role: 'Campaign Director',
+      }
+    ],
+    maxTeamSize: 5,
+    stars: 95,
+    views: 640,
+    postedAt: '3 hours ago',
+    matchScore: 92,
+    matchReason: 'Matches your Campaign Strategy & Creative direction capabilities.',
+    discordInviteUrl: 'https://discord.gg/zerowaste-campaign',
+    roleSlots: [
+      {
+        id: 'camp-role-1',
+        title: 'Lead Viral Copywriter & Hook Specialist (Open)',
+        category: 'copywriter',
+        status: 'open',
+        commitmentHours: 6,
+        requirements: ['Short-form video scriptwriting', 'Gen-Z culture resonance', 'Punchy headline crafting'],
+        responsibilities: ['Write 15 video script concepts for TikTok/Reels', 'Draft petition slogans'],
+      },
+      {
+        id: 'camp-role-2',
+        title: 'Short-Form Video Editor & Motion Graphics (Open)',
+        category: 'design',
+        status: 'open',
+        commitmentHours: 8,
+        requirements: ['Premiere / CapCut Pro / After Effects', 'Pacing and caption styling'],
+        responsibilities: ['Edit 10 hero campaign videos with engaging motion captions'],
+      },
+      {
+        id: 'camp-role-3',
+        title: 'Influencer Outreach & Partner Lead (Open)',
+        category: 'marketing-strategist',
+        status: 'open',
+        commitmentHours: 5,
+        requirements: ['Creator relations', 'DM campaign execution', 'Brand partnership tracking'],
+        responsibilities: ['Recruit 50 eco-influencers for coordinated launch day hashtag takeover'],
+      }
+    ],
+    firstGoodIssue: {
+      id: 'task-camp-1',
+      title: 'Brainstorm 10 viral challenge concepts & hashtag names',
+      category: 'Creative Concept',
+      difficulty: 'Quick Win (~30m)',
+      estimatedMinutes: 30,
+      summary: 'Generate catchy hashtag ideas and 15-second challenge concepts for campaign launch.',
+      acceptanceCriteria: ['10 distinct challenge hooks', '3 hashtag variations with domain/social availability'],
+      status: 'open',
+      priority: 'high',
+    },
+    tasks: [
+      {
+        id: 'task-camp-1',
+        title: 'Brainstorm 10 viral challenge concepts & hashtag names',
+        category: 'Creative Concept',
+        difficulty: 'Quick Win (~30m)',
+        estimatedMinutes: 30,
+        summary: 'Generate catchy hashtag ideas and 15-second challenge concepts for campaign launch.',
+        acceptanceCriteria: ['10 distinct challenge hooks', '3 hashtag variations with domain/social availability'],
+        status: 'open',
+        priority: 'high',
+      },
+      {
+        id: 'task-camp-2',
+        title: 'Design brand style guide & neon typography badge',
+        category: 'Branding',
+        difficulty: 'Moderate (~1-2h)',
+        estimatedMinutes: 60,
+        summary: 'Create color palette, stickers, and profile avatar frame overlays for campaign supporters.',
+        acceptanceCriteria: ['Figma style tile', 'PNG overlay templates'],
+        status: 'open',
+        priority: 'medium',
+      }
+    ],
+    milestones: [
+      { id: 'm-camp-1', title: 'Finalize Campaign Messaging & Brand Identity', stage: 'Blueprint / Spec', status: 'in_progress', owner: 'Jordan Brooks' },
+      { id: 'm-camp-2', title: 'Produce 10 Launch Hero Short Videos', stage: 'Scaffolding', status: 'upcoming' },
+      { id: 'm-camp-3', title: 'Coordinated Launch Day Hashtag Takeover', stage: 'Alpha / MVP Live', status: 'upcoming' },
+    ],
+    architecture: {
+      summary: 'Creative campaign framework driven by Notion content pipeline, Figma asset library, and CapCut video production workflow.',
+      campaignDeckUrl: 'https://notion.so/zerowaste-campaign-plan',
+      figmaUrl: 'https://figma.com/file/zerowaste-brand-kit',
+    },
+    workspaceResources: [
+      { id: 'res-camp-1', title: 'Notion Campaign Hub & Script Pipeline', type: 'notion', url: 'https://notion.so/zerowaste-campaign-plan', description: 'Central hub for content ideas & status', addedBy: 'Jordan Brooks', addedAt: '1 day ago' },
+      { id: 'res-camp-2', title: 'Figma Visual Brand Kit', type: 'figma', url: 'https://figma.com/file/zerowaste-brand-kit', description: 'Graphics, sticker packs, and typography', addedBy: 'Jordan Brooks', addedAt: 'Yesterday' }
+    ],
+    workspaceActivities: [
+      { id: 'act-camp-1', user: 'Jordan Brooks', userAvatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80', action: 'created project workspace', target: 'ZeroWaste Viral', timestamp: '3h ago', type: 'resource' }
+    ],
+    aiSkillRecommendations: [
+      {
+        roleTitle: 'Lead Viral Copywriter',
+        category: 'copywriter',
+        reason: 'Crucial for writing snappy TikTok hooks that convert casual viewers into campaign participants.',
+        suggestedSkills: ['Copywriting', 'Viral Storytelling', 'Social Media'],
+        potentialCandidates: [
+          { name: 'Mia Thorne', handle: '@mia_words', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', role: 'Copywriter & Strategist', matchScore: 97 },
+          { name: 'Leo Vance', handle: '@leovance_content', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', role: 'Content Creator', matchScore: 88 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'project-tech-1',
     title: 'PulseStream AI',
     tagline: 'Real-time multi-speaker audio transcription & semantic diarization pipeline.',
-    description: 'High-throughput async audio stream processing pipeline built on Whisper and FastAPI. Backend and GPU chunking architecture are fully implemented; we need a frontend co-builder to craft the reactive waveform UI and timeline editor.',
+    description: 'High-throughput async audio stream processing pipeline built on Whisper and FastAPI. Backend GPU chunking architecture is implemented; looking for frontend react engineers and ML devops specialists.',
+    category: 'Tech & AI',
     stage: 'Scaffolding',
     stageProgress: 55,
-    techStack: ['Python', 'FastAPI', 'PyTorch', 'Redis', 'React', 'Tailwind'],
+    techStack: ['Python', 'FastAPI', 'PyTorch', 'React', 'Tailwind', 'Docker'],
     creator: {
       name: 'Alex Vance',
       handle: '@alexv',
@@ -52,7 +360,7 @@ export const mockProjects: Project[] = [
     views: 420,
     postedAt: '2 hours ago',
     matchScore: 98,
-    matchReason: 'Direct stack overlap with your FastAPI & Python background. Looking for Scaffolding stage collaborators.',
+    matchReason: 'Direct stack overlap with your FastAPI & Python background.',
     discordInviteUrl: 'https://discord.gg/pulsestream-dev',
     repoCloneCommand: 'git clone https://github.com/pulsestream/core.git',
     roleSlots: [
@@ -69,7 +377,7 @@ export const mockProjects: Project[] = [
         },
         commitmentHours: 12,
         requirements: ['Python 3.11+', 'FastAPI WebSockets', 'Redis Streams'],
-        responsibilities: ['Maintain 100ms chunk processing buffer', 'GPU worker orchestration via Celery/Redis'],
+        responsibilities: ['Maintain 100ms chunk processing buffer', 'GPU worker orchestration'],
       },
       {
         id: 'ps-role-2',
@@ -78,7 +386,7 @@ export const mockProjects: Project[] = [
         status: 'open',
         commitmentHours: 6,
         requirements: ['React 18+', 'Tailwind CSS', 'Web Audio API / WaveSurfer.js experience'],
-        responsibilities: ['Build interactive speaker timeline editor', 'Wire up WebSocket transcript live stream', 'Keyboard shortcut navigation for scrubbing'],
+        responsibilities: ['Build interactive speaker timeline editor', 'Wire up WebSocket transcript live stream'],
       },
       {
         id: 'ps-role-3',
@@ -91,526 +399,178 @@ export const mockProjects: Project[] = [
       }
     ],
     firstGoodIssue: {
-      id: 'issue-ps-1',
+      id: 'task-ps-1',
       title: 'Build WebSocket client audio visualizer & live chunk progress bar',
+      category: 'Frontend Dev',
       difficulty: 'Quick Win (~30m)',
       estimatedMinutes: 30,
-      summary: 'Subscribe to `ws://localhost:8000/v1/stream/transcribe` and render a real-time dB audio amplitude level meter alongside incoming token word-by-word streaming.',
-      acceptanceCriteria: [
-        'Display audio frequency bar with 60fps canvas or CSS transform animation',
-        'Append incoming JSON transcript tokens without UI stutter',
-        'Handle reconnect exponential backoff with a clean toast notification'
-      ],
-      filesToTouch: ['src/components/AudioVisualizer.tsx', 'src/hooks/useTranscriptStream.ts'],
-      starterSnippet: `// Quick snippet to verify WebSocket payload contract:
-const ws = new WebSocket("ws://localhost:8000/v1/stream/transcribe");
-ws.onmessage = (event) => {
-  const { chunk_id, speaker_id, text, confidence } = JSON.parse(event.data);
-  console.log(\`Speaker \${speaker_id}: \${text} (\${confidence}%)\`);
-};`,
+      summary: 'Subscribe to `ws://localhost:8000/v1/stream/transcribe` and render a real-time dB audio amplitude level meter.',
+      acceptanceCriteria: ['Display audio frequency bar with 60fps canvas or CSS transform animation', 'Handle disconnect/reconnect states gracefully'],
       status: 'open',
+      priority: 'high',
     },
-    architecture: {
-      summary: 'FastAPI async gateway receiving dual-channel PCM audio over WebSockets -> Redis queue -> batch Whisper-large-v3 GPU worker -> WebSocket push back to frontend with word timestamps.',
-      backendStack: 'Python 3.12, FastAPI, Celery, PyTorch Whisper-Large-v3',
-      frontendStack: 'Next.js 14 / React, Tailwind CSS, Zustand, WaveSurfer',
-      dataLayer: 'Redis Streams (Buffer) + PostgreSQL (Persistent transcripts & search)',
-      infraStack: 'Docker Compose (local dev), RunPod Serverless GPU (Prod inference)',
-      keyEndpoints: [
-        { method: 'WS', path: '/v1/stream/transcribe', desc: 'Bidirectional binary PCM stream & JSON token responses', authRequired: true },
-        { method: 'POST', path: '/v1/sessions/new', desc: 'Initialize diarization session and retrieve worker routing key', authRequired: true },
-        { method: 'GET', path: '/v1/transcripts/{id}', desc: 'Fetch full structured transcript with speaker turn timestamps', authRequired: false }
-      ],
-      architectureDiagramMarkdown: `\`\`\`
-[Browser / Microphone]
-         │ (Binary PCM WebSockets)
-         ▼
-[FastAPI Gateway] ──(Redis Stream Buffer)──► [GPU Inference Worker]
-         │                                          │ (Whisper v3)
-         ◄──(Real-time Token Push via WS)────────────┘
-\`\`\``,
-      githubUrl: 'https://github.com/pulsestream/pulsestream-core',
-      specUrl: 'https://pulsestream.dev/docs/architecture-v1.pdf',
-      figmaUrl: 'https://figma.com/@alexv/pulsestream-ui-draft',
-    },
+    tasks: [
+      {
+        id: 'task-ps-1',
+        title: 'Build WebSocket client audio visualizer & live chunk progress bar',
+        category: 'Frontend Dev',
+        difficulty: 'Quick Win (~30m)',
+        estimatedMinutes: 30,
+        summary: 'Subscribe to `ws://localhost:8000/v1/stream/transcribe` and render a real-time dB audio amplitude level meter.',
+        acceptanceCriteria: ['Display audio frequency bar with 60fps canvas or CSS transform animation'],
+        status: 'open',
+        priority: 'high',
+      },
+      {
+        id: 'task-ps-2',
+        title: 'Implement speaker diarization color tags in transcript feed',
+        category: 'Frontend Dev',
+        difficulty: 'Moderate (~1-2h)',
+        estimatedMinutes: 90,
+        summary: 'Assign distinct avatar pills and colors for Speaker 0, Speaker 1, Speaker 2 in the live view.',
+        acceptanceCriteria: ['Dynamic color generator by speaker ID', 'Editable speaker name labels'],
+        status: 'open',
+        priority: 'medium',
+      }
+    ],
     milestones: [
-      { id: 'm1', title: 'FastAPI WebSocket ingestion engine', stage: 'Blueprint / Spec', status: 'completed', owner: 'Alex Vance' },
-      { id: 'm2', title: 'Whisper GPU batching & token streamer', stage: 'Scaffolding', status: 'completed', owner: 'Elena Rostova' },
-      { id: 'm3', title: 'Next.js frontend with live waveform', stage: 'Scaffolding', status: 'in_progress', blockerNote: 'Awaiting frontend co-builder to take over UI components' },
-      { id: 'm4', title: 'End-to-end latency benchmarks under 250ms', stage: 'Alpha / MVP Live', status: 'upcoming' },
-      { id: 'm5', title: 'Public hacker launch on X and ProductHunt', stage: 'Ship & Distribute', status: 'upcoming' }
+      { id: 'm-ps-1', title: 'FastAPI WebSocket Engine & Whisper Model Integration', stage: 'Blueprint / Spec', status: 'completed', owner: 'Alex Vance' },
+      { id: 'm-ps-2', title: 'Real-time Waveform & Transcript UI Editor', stage: 'Scaffolding', status: 'in_progress', owner: 'Seeking Frontend Lead', eta: 'Next 5 Days' },
+      { id: 'm-ps-3', title: 'Multi-GPU Auto-scaling Infrastructure', stage: 'Alpha / MVP Live', status: 'upcoming' },
+    ],
+    architecture: {
+      summary: 'FastAPI async gateway receiving binary Opus chunks, pushing to Redis Stream workers running Whisper v3 on CUDA GPUs.',
+      backendStack: 'FastAPI, Python 3.11, PyTorch, PyTorch CUDA, Redis Streams',
+      frontendStack: 'React 19, Tailwind CSS, Wavesurfer.js, Zustand',
+      infraStack: 'Docker Container Registry, RunPod Serverless GPU, Cloudflare Tunnels',
+      githubUrl: 'https://github.com/pulsestream/core',
+      demoUrl: 'https://pulsestream.dev/demo',
+    },
+    workspaceResources: [
+      { id: 'res-ps-1', title: 'GitHub Repository', type: 'github', url: 'https://github.com/pulsestream/core', description: 'Core FastAPI & PyTorch service', addedBy: 'Alex Vance', addedAt: '3 days ago' },
+      { id: 'res-ps-2', title: 'API Endpoint OpenAPI Spec', type: 'doc', url: 'https://pulsestream.dev/docs', description: 'Interactive Swagger UI & WebSocket payloads', addedBy: 'Alex Vance', addedAt: '2 days ago' }
+    ],
+    workspaceActivities: [
+      { id: 'act-ps-1', user: 'Elena Rostova', userAvatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80', action: 'pushed commit', target: 'fix: optimize Redis buffer latency', timestamp: '45m ago', type: 'resource' }
+    ],
+    aiSkillRecommendations: [
+      {
+        roleTitle: 'Frontend / Reactive Timeline Lead',
+        category: 'frontend',
+        reason: 'Required immediately to connect WebSocket audio streams to interactive React components.',
+        suggestedSkills: ['React', 'Tailwind', 'Web Audio API'],
+        potentialCandidates: [
+          { name: 'Kaito Tanaka', handle: '@kaito_ui', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', role: 'Senior React Developer', matchScore: 95 },
+        ]
+      }
     ]
   },
   {
-    id: 'project-2',
-    title: 'SyncLite Engine',
-    tagline: 'Zero-config local-first SQLite sync engine for offline-first React & mobile apps.',
-    description: 'A lightweight CRDT-driven sync layer that mirrors local SQLite/IndexedDB databases to a central Go cluster with automatic delta conflict resolution.',
-    stage: 'Blueprint / Spec',
-    stageProgress: 25,
-    techStack: ['Go', 'SQLite', 'TypeScript', 'WebAssembly', 'CRDT'],
+    id: 'project-comm-1',
+    title: 'Neighborhood Solar Co-op Mobilizer',
+    tagline: 'Empowering local communities to pool purchasing power for rooftop solar installs.',
+    description: 'A social action framework & web app helping neighbors organize solar co-ops, lower installation costs by 30%, and navigate municipal clean energy grants together. We need community organizers, legal advisors, and web developers.',
+    category: 'Community & Social',
+    stage: 'Alpha / MVP Live',
+    stageProgress: 80,
+    techStack: ['Community Outreach', 'Social Impact', 'Legal/Policy', 'React', 'UX Design'],
     creator: {
-      name: 'Elena Rostova',
-      handle: '@elena_r',
-      avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
-      role: 'Distributed Systems Dev',
+      name: 'Carlos Mendez',
+      handle: '@carlos_solar',
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80',
+      role: 'Clean Energy Organizer',
       verified: true,
-      github: 'erostova',
     },
     teamMembers: [
       {
-        name: 'Elena Rostova',
-        handle: '@elena_r',
-        avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
-        role: 'Go Core Architect',
+        name: 'Carlos Mendez',
+        handle: '@carlos_solar',
+        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80',
+        role: 'Clean Energy Organizer',
+      },
+      {
+        name: 'Lisa Nguyen',
+        handle: '@lisa_law',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+        role: 'Clean Energy Legal Advisor',
       }
     ],
-    maxTeamSize: 3,
-    stars: 126,
-    views: 890,
+    maxTeamSize: 6,
+    stars: 142,
+    views: 1120,
     postedAt: '5 hours ago',
-    matchScore: 92,
-    matchReason: 'Strong match for your Go experience and interest in distributed sync architecture.',
-    discordInviteUrl: 'https://discord.gg/synclite-engine',
-    repoCloneCommand: 'git clone https://github.com/synclite/synclite-go.git',
+    matchScore: 88,
+    matchReason: 'Fits your interest in community mobilization and social impact tech.',
+    discordInviteUrl: 'https://discord.gg/neighborhood-solar',
     roleSlots: [
       {
-        id: 'sl-role-1',
-        title: 'Core Engine / Distributed Sync (Filled)',
-        category: 'backend',
-        status: 'filled',
-        filledBy: {
-          name: 'Elena Rostova',
-          handle: '@elena_r',
-          avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
-          role: 'Core Architect',
-        },
-        commitmentHours: 10,
-        requirements: ['Go 1.22+', 'SQLite Cgo / modernc.org', 'Vector clocks'],
-        responsibilities: ['Implement logical timestamp transaction log', 'Replication server RPC protocol'],
+        id: 'sol-role-1',
+        title: 'Community District Ambassador (Open)',
+        category: 'community-manager',
+        status: 'open',
+        commitmentHours: 6,
+        requirements: ['Local neighborhood networking', 'Townhall presentation skills'],
+        responsibilities: ['Host monthly solar co-op Q&A sessions', 'Onboard 20 households per cluster'],
       },
       {
-        id: 'sl-role-2',
-        title: 'WASM & TypeScript Client SDK (Open)',
-        category: 'fullstack',
+        id: 'sol-role-2',
+        title: 'Grant & Policy Researcher (Open)',
+        category: 'environment-expert',
         status: 'open',
-        commitmentHours: 8,
-        requirements: ['TypeScript', 'WebAssembly / Emscripten or Rust wasm-pack', 'OPFS (Origin Private File System)'],
-        responsibilities: ['Compile SQLite engine to WASM with OPFS backing', 'Write useSyncLite() React hooks library'],
-      },
-      {
-        id: 'sl-role-3',
-        title: 'Technical Writer & Quickstart Docs (Open)',
-        category: 'growth',
-        status: 'open',
-        commitmentHours: 3,
-        requirements: ['Markdown / Astro Starlight', 'Clear technical writing'],
-        responsibilities: ['Build interactive playground documentation showing offline toggle sync'],
+        commitmentHours: 4,
+        requirements: ['Clean energy tax credit knowledge', 'Municipal policy research'],
+        responsibilities: ['Maintain updated database of local clean energy tax rebates and subsidies'],
       }
     ],
     firstGoodIssue: {
-      id: 'issue-sl-1',
-      title: 'Implement basic LWW (Last-Write-Wins) timestamp conflict resolver in Go',
+      id: 'task-sol-1',
+      title: 'Build solar savings calculator widget for neighborhood homeowners',
+      category: 'Frontend Dev',
       difficulty: 'Moderate (~1-2h)',
       estimatedMinutes: 60,
-      summary: 'Write a pure Go helper function `ResolveConflict(rowA, rowB RowChange) RowChange` that checks logical timestamps and breaks ties with lexicographical node ID ordering.',
-      acceptanceCriteria: [
-        'Deterministic resolution test suite passing 10+ edge cases',
-        'Zero allocations on hot-path row comparison',
-        'Includes unit tests in `pkg/crdt/lww_test.go`'
-      ],
-      filesToTouch: ['pkg/crdt/lww.go', 'pkg/crdt/lww_test.go'],
-      starterSnippet: `type RowChange struct {
-    RowID     string
-    Column    string
-    Value     []byte
-    Timestamp uint64
-    NodeID    string
-}
-
-func ResolveConflict(a, b RowChange) RowChange {
-    if a.Timestamp > b.Timestamp { return a }
-    if b.Timestamp > a.Timestamp { return b }
-    if a.NodeID > b.NodeID { return a }
-    return b
-}`,
+      summary: 'Create an interactive slider calculator estimating annual $ savings based on roof size & location.',
+      acceptanceCriteria: ['Sliders for roof sq ft & monthly electric bill', 'Outputs estimated 10-year ROI and CO2 reduction'],
       status: 'open',
+      priority: 'high',
     },
-    architecture: {
-      summary: 'Client-side SQLite database compiled to WebAssembly storing changes into an append-only delta table. On connection, deltas are synchronized via lightweight HTTP/2 SSE streaming to the central Go coordinator.',
-      backendStack: 'Go 1.22, ConnectRPC / gRPC-Web, BoltDB / SQLite metadata',
-      frontendStack: 'TypeScript SDK, WebAssembly (SQLite via OPFS), React Hooks',
-      dataLayer: 'Local SQLite (Client) + Central Postgres WAL / S3 cold snapshots',
-      infraStack: 'Fly.io edge instances + Docker',
-      keyEndpoints: [
-        { method: 'POST', path: '/v1/sync/push', desc: 'Push encrypted client change deltas', authRequired: true },
-        { method: 'GET', path: '/v1/sync/pull', desc: 'Server-Sent Events delta stream since cursor', authRequired: true },
-        { method: 'GET', path: '/v1/healthz', desc: 'Node sync health check', authRequired: false }
-      ],
-      architectureDiagramMarkdown: `\`\`\`
-[React App + WASM SQLite]
-       │ (Push/Pull Deltas via SSE)
-       ▼
-[Go Coordinator Edge Node] ──(Consensus Log)──► [Global Postgres Hub]
-\`\`\``,
-      githubUrl: 'https://github.com/synclite/synclite-specs',
-      specUrl: 'https://synclite.dev/spec-v0.1.md',
-    },
+    tasks: [
+      {
+        id: 'task-sol-1',
+        title: 'Build solar savings calculator widget for neighborhood homeowners',
+        category: 'Frontend Dev',
+        difficulty: 'Moderate (~1-2h)',
+        estimatedMinutes: 60,
+        summary: 'Create an interactive slider calculator estimating annual $ savings based on roof size & location.',
+        acceptanceCriteria: ['Sliders for roof sq ft & monthly electric bill', 'Outputs estimated 10-year ROI'],
+        status: 'open',
+        priority: 'high',
+      }
+    ],
     milestones: [
-      { id: 'm2-1', title: 'Define CRDT mutation wire protocol', stage: 'Blueprint / Spec', status: 'completed', owner: 'Elena Rostova' },
-      { id: 'm2-2', title: 'Go delta ingest handler & unit tests', stage: 'Blueprint / Spec', status: 'in_progress', blockerNote: 'Need conflict resolver function verified' },
-      { id: 'm2-3', title: 'WASM SQLite wrapper with OPFS persistence', stage: 'Scaffolding', status: 'upcoming' },
-      { id: 'm2-4', title: 'Sample offline Notes app demo', stage: 'Alpha / MVP Live', status: 'upcoming' }
-    ]
-  },
-  {
-    id: 'project-3',
-    title: 'KubeLens Terminal',
-    tagline: 'Zero-bloat TUI & Web Dashboard for multi-cluster Kubernetes log tracing.',
-    description: 'A blazing-fast developer-first Kubernetes observability dashboard. Native Bubbletea TUI + companion React web view for engineers tired of heavy enterprise APM bills.',
-    stage: 'Alpha / MVP Live',
-    stageProgress: 75,
-    techStack: ['Go', 'React', 'Tailwind', 'Docker', 'Kubernetes', 'GraphQL'],
-    creator: {
-      name: 'Marcus Chen',
-      handle: '@mchen_dev',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-      role: 'Platform & SRE Engineer',
-      verified: true,
-      github: 'mchen-ops',
-    },
-    teamMembers: [
-      {
-        name: 'Marcus Chen',
-        handle: '@mchen_dev',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-        role: 'TUI & Core Engine',
-      },
-      {
-        name: 'Sarah Kim',
-        handle: '@skim_k8s',
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
-        role: 'K8s Controller & Auth',
-      }
+      { id: 'm-sol-1', title: 'Legal Co-op Agreement Template Creation', stage: 'Blueprint / Spec', status: 'completed', owner: 'Lisa Nguyen' },
+      { id: 'm-sol-2', title: 'Pilot in 3 Neighborhood Clusters (120 Homes)', stage: 'Alpha / MVP Live', status: 'in_progress', owner: 'Carlos Mendez' },
     ],
-    maxTeamSize: 4,
-    stars: 340,
-    views: 1840,
-    postedAt: '1 day ago',
-    matchScore: 88,
-    matchReason: 'Active alpha project with Docker/K8s/Go backend. Immediate UI issues to claim.',
-    discordInviteUrl: 'https://discord.gg/kubelens',
-    repoCloneCommand: 'git clone https://github.com/kubelens/kubelens.git',
-    roleSlots: [
-      {
-        id: 'kl-role-1',
-        title: 'Backend / K8s Client & TUI (Filled)',
-        category: 'backend',
-        status: 'filled',
-        filledBy: {
-          name: 'Marcus Chen',
-          handle: '@mchen_dev',
-          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-          role: 'Core Developer',
-        },
-        commitmentHours: 12,
-        requirements: ['Go 1.22', 'client-go', 'Bubbletea TUI'],
-        responsibilities: ['Maintain cluster watch streams', 'Terminal ANSI rendering'],
-      },
-      {
-        id: 'kl-role-2',
-        title: 'Frontend / Web UI Polish (Open)',
-        category: 'frontend',
-        status: 'open',
-        commitmentHours: 5,
-        requirements: ['React', 'Tailwind CSS', 'Virtual list / High performance canvas'],
-        responsibilities: ['Build keyboard-driven pod log viewer', 'Add dark mode syntax highlighting for JSON logs'],
-      },
-      {
-        id: 'kl-role-3',
-        title: 'Security & RBAC Auditor (Open)',
-        category: 'devops',
-        status: 'open',
-        commitmentHours: 3,
-        requirements: ['Kubernetes RBAC', 'ServiceAccount scoping'],
-        responsibilities: ['Ensure read-only cluster role bindings have minimal surface area'],
-      }
-    ],
-    firstGoodIssue: {
-      id: 'issue-kl-1',
-      title: 'Add keyboard shortcut modal and vim keybindings (j/k/h/l) for pod row navigation',
-      difficulty: 'Quick Win (~30m)',
-      estimatedMinutes: 25,
-      summary: 'Users want to navigate the web dashboard pod log stream without taking hands off the keyboard. Implement `j`/`k` for scrolling and `?` to toggle keybindings cheat sheet.',
-      acceptanceCriteria: [
-        'Pressing "j" scrolls down by 1 log entry; "k" scrolls up',
-        'Pressing "?" opens accessible dialog modal with keymap',
-        'Keys are disabled when focused on the filter input field'
-      ],
-      filesToTouch: ['web/src/hooks/useVimKeymap.ts', 'web/src/components/KeymapModal.tsx'],
-      starterSnippet: `export function useVimKeymap(onNext: () => void, onPrev: () => void) {
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
-      if (e.key === 'j') onNext();
-      if (e.key === 'k') onPrev();
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [onNext, onPrev]);
-}`,
-      status: 'open',
-    },
     architecture: {
-      summary: 'Embedded Go binary connects to current kubeconfig context, subscribes to Kubernetes Watch API, and exposes both an interactive Bubbletea terminal interface and a local React web UI via embedded http.FileServer.',
-      backendStack: 'Go, k8s.io/client-go, gorilla/websocket, Charm Bubbletea',
-      frontendStack: 'React 19, Tailwind CSS, TanStack Virtual, Lucide',
-      dataLayer: 'In-memory ring buffer (100k log lines) + SQLite cache',
-      infraStack: 'Single static binary (distroless)',
-      keyEndpoints: [
-        { method: 'GET', path: '/api/v1/pods', desc: 'List active pods with restart counts & health', authRequired: false },
-        { method: 'WS', path: '/api/v1/logs/stream', desc: 'Live log tailing stream with regex filter params', authRequired: false }
-      ],
-      architectureDiagramMarkdown: `\`\`\`
-[K8s API Server] ──(Watch API)──► [KubeLens Go Daemon]
-                                          │
-                   ┌──────────────────────┴──────────────────────┐
-                   ▼                                             ▼
-          [Terminal (Bubbletea)]                       [Local Web Browser (React)]
-\`\`\``,
-      githubUrl: 'https://github.com/kubelens/kubelens',
-      demoUrl: 'https://demo.kubelens.dev',
+      summary: 'Community action portal built with React, Supabase backend, and open municipal rebate API integration.',
+      frontendStack: 'React, Tailwind CSS, Recharts',
+      dataLayer: 'Supabase PostgreSQL & Row Level Security',
     },
-    milestones: [
-      { id: 'm3-1', title: 'Multi-cluster kubeconfig auto-detect', stage: 'Blueprint / Spec', status: 'completed' },
-      { id: 'm3-2', title: 'Bubbletea terminal log streamer', stage: 'Scaffolding', status: 'completed' },
-      { id: 'm3-3', title: 'React web UI log viewer with virtualizer', stage: 'Alpha / MVP Live', status: 'completed' },
-      { id: 'm3-4', title: 'Vim navigation and log color schemes', stage: 'Alpha / MVP Live', status: 'in_progress', blockerNote: 'Active First Good Issue' },
-      { id: 'm3-5', title: 'Homebrew tap and single binary release', stage: 'Ship & Distribute', status: 'upcoming' }
-    ]
-  },
-  {
-    id: 'project-4',
-    title: 'VibeCheck Analytics',
-    tagline: 'Privacy-first, self-hosted web analytics with clickstream heatmaps.',
-    description: 'Cookieless, GDPR-compliant web analytics powered by ClickHouse and FastAPI. We already have 1,200 self-hosted instances running the MVP; now scaling distribution and CMS plugins.',
-    stage: 'Ship & Distribute',
-    stageProgress: 90,
-    techStack: ['FastAPI', 'ClickHouse', 'Python', 'PostgreSQL', 'Tailwind', 'Docker'],
-    creator: {
-      name: 'Devon Vance',
-      handle: '@devon_v',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-      role: 'Fullstack & Founder',
-      verified: true,
-      github: 'devon-vibe',
-    },
-    teamMembers: [
-      {
-        name: 'Devon Vance',
-        handle: '@devon_v',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-        role: 'Fullstack Lead',
-      },
-      {
-        name: 'Priya Patel',
-        handle: '@priyadata',
-        avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
-        role: 'ClickHouse Data Architect',
-      }
+    workspaceResources: [
+      { id: 'res-sol-1', title: 'Solar Co-op Bylaws & Contract Template', type: 'doc', url: 'https://docs.google.com/document/solar-bylaws', description: 'Standard legal template for neighborhood co-ops', addedBy: 'Lisa Nguyen', addedAt: '4 days ago' }
     ],
-    maxTeamSize: 4,
-    stars: 940,
-    views: 4500,
-    postedAt: '2 days ago',
-    matchScore: 94,
-    matchReason: 'FastAPI + Python stack with ready-to-scale distribution needs.',
-    discordInviteUrl: 'https://discord.gg/vibecheck-analytics',
-    repoCloneCommand: 'git clone https://github.com/vibecheck/vibecheck.git',
-    roleSlots: [
-      {
-        id: 'vc-role-1',
-        title: 'Core Backend / ClickHouse Queries (Filled)',
-        category: 'backend',
-        status: 'filled',
-        filledBy: {
-          name: 'Priya Patel',
-          handle: '@priyadata',
-          avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
-          role: 'Data Architect',
-        },
-        commitmentHours: 10,
-        requirements: ['ClickHouse SQL', 'Python / FastAPI', 'PostgreSQL'],
-        responsibilities: ['Optimize rollup materialized views for 100M+ events/day'],
-      },
-      {
-        id: 'vc-role-2',
-        title: 'Developer Relations & Docs (Open)',
-        category: 'growth',
-        status: 'open',
-        commitmentHours: 5,
-        requirements: ['Technical writing', 'Community management', 'DevRel'],
-        responsibilities: ['Write integration guides for Next.js, Remix, and Astro', 'Coordinate GitHub Discussions and Discord support'],
-      },
-      {
-        id: 'vc-role-3',
-        title: 'Plugin & SDK Contributor (Open)',
-        category: 'fullstack',
-        status: 'open',
-        commitmentHours: 6,
-        requirements: ['TypeScript', 'WordPress PHP or Shopify App APIs'],
-        responsibilities: ['Build 1-click WordPress plugin and npm package wrapper'],
-      }
+    workspaceActivities: [
+      { id: 'act-sol-1', user: 'Carlos Mendez', userAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80', action: 'added milestone', target: 'Pilot in 3 Neighborhood Clusters', timestamp: '2h ago', type: 'milestone' }
     ],
-    firstGoodIssue: {
-      id: 'issue-vc-1',
-      title: 'Create lightweight 1.2KB vanilla JS tracker snippet with beacon API fallback',
-      difficulty: 'Quick Win (~30m)',
-      estimatedMinutes: 30,
-      summary: 'Write a zero-dependency `tracker.js` script that captures pageview and custom event data using `navigator.sendBeacon` with fallback to `fetch(..., { keepalive: true })`.',
-      acceptanceCriteria: [
-        'Final minified + gzipped bundle size strictly under 1.4KB',
-        'Respects `navigator.doNotTrack` header when enabled',
-        'Does not drop events during page unload / tab switch'
-      ],
-      filesToTouch: ['packages/tracker/src/index.ts', 'packages/tracker/tests/beacon.test.ts'],
-      starterSnippet: `export function sendEvent(endpoint: string, payload: object) {
-  const data = JSON.stringify({ ...payload, ts: Date.now() });
-  if (navigator.sendBeacon) {
-    navigator.sendBeacon(endpoint, data);
-  } else {
-    fetch(endpoint, { method: 'POST', body: data, keepalive: true });
-  }
-}`,
-      status: 'open',
-    },
-    architecture: {
-      summary: 'High-throughput async ingestion endpoint buffering pageviews into ClickHouse columnar storage. Aggregated querying is performed via FastAPI backend and served to the reactive dashboard.',
-      backendStack: 'FastAPI, Uvicorn, Python 3.12',
-      frontendStack: 'Tailwind CSS, Chart.js, Vite React',
-      dataLayer: 'ClickHouse (event store) + PostgreSQL (users, websites, tokens)',
-      infraStack: 'Docker Compose, Caddy Reverse Proxy with auto SSL',
-      keyEndpoints: [
-        { method: 'POST', path: '/api/v1/collect', desc: 'Public cookieless event ingestion endpoint', authRequired: false },
-        { method: 'GET', path: '/api/v1/stats/overview', desc: 'Aggregated unique visitors and pageviews breakdown', authRequired: true }
-      ],
-      githubUrl: 'https://github.com/vibecheck/vibecheck',
-      demoUrl: 'https://app.vibecheck.dev/demo',
-    },
-    milestones: [
-      { id: 'm4-1', title: 'Core ClickHouse table schema & materialized views', stage: 'Blueprint / Spec', status: 'completed' },
-      { id: 'm4-2', title: 'FastAPI ingest service with 10k req/sec throughput', stage: 'Scaffolding', status: 'completed' },
-      { id: 'm4-3', title: 'Dashboard MVP with real-time visitor counter', stage: 'Alpha / MVP Live', status: 'completed' },
-      { id: 'm4-4', title: 'Official Next.js & Astro plugin ecosystem', stage: 'Ship & Distribute', status: 'in_progress', blockerNote: 'Looking for SDK contributors' },
-      { id: 'm4-5', title: '1-Click Cloud Hosting Template on Railway & Render', stage: 'Ship & Distribute', status: 'upcoming' }
-    ]
-  },
-  {
-    id: 'project-5',
-    title: 'HyperVector DB',
-    tagline: 'Embedded in-memory vector database with AVX-512 SIMD hardware acceleration.',
-    description: 'Ultra low-latency vector search engine designed to run inside edge functions and local AI apps. Rust core with zero-copy Python and Node.js bindings.',
-    stage: 'Scaffolding',
-    stageProgress: 40,
-    techStack: ['Rust', 'Python', 'PyTorch', 'FastAPI', 'C++'],
-    creator: {
-      name: 'Viktor K.',
-      handle: '@viktor_simd',
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
-      role: 'Systems & Performance Engineer',
-      verified: true,
-      github: 'viktor-simd',
-    },
-    teamMembers: [
+    aiSkillRecommendations: [
       {
-        name: 'Viktor K.',
-        handle: '@viktor_simd',
-        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
-        role: 'Rust Core Lead',
+        roleTitle: 'Community District Ambassador',
+        category: 'community-manager',
+        reason: 'Needed to engage homeowners directly and run neighborhood solar workshops.',
+        suggestedSkills: ['Community Outreach', 'Public Speaking', 'Sustainability'],
+        potentialCandidates: [
+          { name: 'Elena Torres', handle: '@elena_community', avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80', role: 'Community Lead', matchScore: 92 }
+        ]
       }
-    ],
-    maxTeamSize: 3,
-    stars: 215,
-    views: 1120,
-    postedAt: '12 hours ago',
-    matchScore: 91,
-    matchReason: 'High performance Python + PyTorch vector bindings needed for Rust engine.',
-    discordInviteUrl: 'https://discord.gg/hypervector',
-    repoCloneCommand: 'git clone https://github.com/hypervector/hypervector-rs.git',
-    roleSlots: [
-      {
-        id: 'hv-role-1',
-        title: 'Core Engine / Rust & SIMD (Filled)',
-        category: 'backend',
-        status: 'filled',
-        filledBy: {
-          name: 'Viktor K.',
-          handle: '@viktor_simd',
-          avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
-          role: 'Core Lead',
-        },
-        commitmentHours: 12,
-        requirements: ['Rust 1.78+', 'SIMD intrinsics', 'HNSW graph indexing'],
-        responsibilities: ['AVX-512 distance calculation kernels', 'Lock-free index mutations'],
-      },
-      {
-        id: 'hv-role-2',
-        title: 'Python SDK & PyO3 Bindings (Open)',
-        category: 'ml-ai',
-        status: 'open',
-        commitmentHours: 6,
-        requirements: ['Python 3.10+', 'PyO3 / maturin', 'NumPy / PyTorch buffer protocol'],
-        responsibilities: ['Create pip package `pip install hypervector`', 'Zero-copy NumPy array ingestion'],
-      }
-    ],
-    firstGoodIssue: {
-      id: 'issue-hv-1',
-      title: 'Expose Cosine Similarity benchmark CLI runner with JSON output format',
-      difficulty: 'Quick Win (~30m)',
-      estimatedMinutes: 30,
-      summary: 'Add a `--benchmark` flag to the Rust CLI tool that generates 10,000 random 1536-dim vectors and outputs percentile latencies (p50, p95, p99) formatted as JSON.',
-      acceptanceCriteria: [
-        'Outputs clean JSON matching `{"p50_us": 12, "p95_us": 28, "throughput_qps": 85000}`',
-        'Supports configurable dimension `--dim 1536` and `--count 10000`'
-      ],
-      filesToTouch: ['crates/cli/src/bench.rs', 'crates/cli/src/main.rs'],
-      status: 'open',
-    },
-    architecture: {
-      summary: 'Rust HNSW vector index supporting cosine and Euclidean distance metrics with runtime CPU feature detection (AVX-512, AVX2, ARM Neon).',
-      backendStack: 'Rust, PyO3, Maturin',
-      frontendStack: 'N/A (CLI and SDKs)',
-      dataLayer: 'Memory-mapped files (.hvec format)',
-      infraStack: 'GitHub Actions Matrix (x86_64, aarch64 builds)',
-      keyEndpoints: [
-        { method: 'POST', path: 'SDK: client.insert(vector, metadata)', desc: 'Zero-copy vector insertion', authRequired: false },
-        { method: 'GET', path: 'SDK: client.query(vector, top_k=10)', desc: 'Sub-millisecond nearest neighbor query', authRequired: false }
-      ],
-      githubUrl: 'https://github.com/hypervector/hypervector-rs',
-    },
-    milestones: [
-      { id: 'm5-1', title: 'AVX-512 Euclidean distance kernel', stage: 'Blueprint / Spec', status: 'completed' },
-      { id: 'm5-2', title: 'HNSW graph indexing in pure safe Rust', stage: 'Scaffolding', status: 'completed' },
-      { id: 'm5-3', title: 'PyO3 bindings for Python NumPy integration', stage: 'Scaffolding', status: 'in_progress', blockerNote: 'Looking for PyO3 contributor' },
-      { id: 'm5-4', title: 'Publish wheels to PyPI and crates.io', stage: 'Alpha / MVP Live', status: 'upcoming' }
     ]
   }
-];
-
-export const allTags = [
-  'Python',
-  'FastAPI',
-  'React',
-  'Tailwind',
-  'Go',
-  'PyTorch',
-  'PostgreSQL',
-  'Redis',
-  'Rust',
-  'TypeScript',
-  'WebAssembly',
-  'Docker',
-  'Kubernetes',
-  'ClickHouse',
-  'CRDT'
 ];

@@ -474,7 +474,7 @@ export const DocketDrawer: React.FC<DocketDrawerProps> = ({
                   Target Files to Modify / Create
                 </h4>
                 <div className="flex flex-wrap gap-2">
-                  {project.firstGoodIssue.filesToTouch.map((file, idx) => (
+                  {(project.firstGoodIssue.filesToTouch || []).map((file, idx) => (
                     <span
                       key={idx}
                       className="px-2.5 py-1 rounded-md bg-[#0A0C14] border border-border font-mono text-xs text-indigo-300"

@@ -4,6 +4,14 @@ export type ExecutionStage =
   | 'Alpha / MVP Live' 
   | 'Ship & Distribute';
 
+export type ProjectCategory = 
+  | 'Tech & AI'
+  | 'Environment & Eco'
+  | 'Campaign & Marketing'
+  | 'Community & Social'
+  | 'Creative & Design'
+  | 'Business & Strategy';
+
 export type RoleCategory = 
   | 'frontend' 
   | 'backend' 
@@ -11,14 +19,26 @@ export type RoleCategory =
   | 'ml-ai' 
   | 'design' 
   | 'devops' 
-  | 'growth';
+  | 'growth'
+  | 'campaign-lead'
+  | 'environment-expert'
+  | 'copywriter'
+  | 'community-manager'
+  | 'marketing-strategist'
+  | 'event-coordinator';
 
 export interface TeamMember {
+  id?: string;
   name: string;
   handle: string;
   avatar: string;
   role: string;
+  skills?: string[];
   github?: string;
+  matchScore?: number;
+  matchReason?: string;
+  location?: string;
+  availableHours?: number;
 }
 
 export interface RoleSlot {
@@ -27,23 +47,30 @@ export interface RoleSlot {
   category: RoleCategory;
   status: 'open' | 'filled';
   filledBy?: TeamMember;
-  commitmentHours: number; // e.g. 5 means ~5h/wk
+  commitmentHours: number;
   requirements: string[];
   responsibilities: string[];
   claimedByCurrentUser?: boolean;
 }
 
-export interface FirstGoodIssue {
+export interface TaskItem {
   id: string;
   title: string;
+  category: string;
   difficulty: 'Quick Win (~30m)' | 'Moderate (~1-2h)' | 'Deep Dive (~3-4h)';
   estimatedMinutes: number;
   summary: string;
   acceptanceCriteria: string[];
-  filesToTouch: string[];
+  filesToTouch?: string[];
   starterSnippet?: string;
   status: 'open' | 'claimed' | 'completed';
+  assignedTo?: string;
+  assignedAvatar?: string;
+  dueDate?: string;
+  priority?: 'low' | 'medium' | 'high';
 }
+
+export type FirstGoodIssue = TaskItem;
 
 export interface EndpointSpec {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'WS';
@@ -64,16 +91,46 @@ export interface Milestone {
 
 export interface ProjectArchitecture {
   summary: string;
-  backendStack: string;
-  frontendStack: string;
-  dataLayer: string;
-  infraStack: string;
-  keyEndpoints: EndpointSpec[];
+  backendStack?: string;
+  frontendStack?: string;
+  dataLayer?: string;
+  infraStack?: string;
+  keyEndpoints?: EndpointSpec[];
   architectureDiagramMarkdown?: string;
   githubUrl?: string;
   specUrl?: string;
   figmaUrl?: string;
   demoUrl?: string;
+  campaignDeckUrl?: string;
+  communityUrl?: string;
+}
+
+export interface WorkspaceResource {
+  id: string;
+  title: string;
+  type: 'figma' | 'github' | 'deck' | 'notion' | 'discord' | 'doc' | 'link';
+  url: string;
+  description: string;
+  addedBy: string;
+  addedAt: string;
+}
+
+export interface WorkspaceActivity {
+  id: string;
+  user: string;
+  userAvatar: string;
+  action: string;
+  target: string;
+  timestamp: string;
+  type: 'role' | 'task' | 'milestone' | 'resource' | 'ai';
+}
+
+export interface AISkillRecommendation {
+  roleTitle: string;
+  category: RoleCategory;
+  reason: string;
+  suggestedSkills: string[];
+  potentialCandidates: TeamMember[];
 }
 
 export interface Project {
@@ -81,11 +138,13 @@ export interface Project {
   title: string;
   tagline: string;
   description: string;
+  category: ProjectCategory;
   stage: ExecutionStage;
-  stageProgress: number; // 0 to 100
+  stageProgress: number;
   techStack: string[];
   roleSlots: RoleSlot[];
-  firstGoodIssue: FirstGoodIssue;
+  firstGoodIssue: TaskItem;
+  tasks: TaskItem[];
   creator: TeamMember & { verified: boolean };
   teamMembers: TeamMember[];
   maxTeamSize: number;
@@ -94,6 +153,9 @@ export interface Project {
   postedAt: string;
   architecture: ProjectArchitecture;
   milestones: Milestone[];
+  workspaceResources: WorkspaceResource[];
+  workspaceActivities: WorkspaceActivity[];
+  aiSkillRecommendations: AISkillRecommendation[];
   matchScore?: number;
   matchReason?: string;
   discordInviteUrl?: string;

@@ -3,17 +3,12 @@ import {
   X, 
   Plus, 
   Trash2, 
-  Zap, 
   Layers, 
-  FileCode2, 
   Check, 
-  Code2, 
-  Sparkles,
-  Server,
-  HelpCircle
+  FolderKanban
 } from 'lucide-react';
-import { Project, ExecutionStage, RoleCategory, RoleSlot, FirstGoodIssue, CurrentUser } from '../types';
-import { allTags } from '../data/mockProjects';
+import { Project, ExecutionStage, ProjectCategory, RoleCategory, RoleSlot, CurrentUser, TaskItem } from '../types';
+import { allCategories, allTags } from '../data/mockProjects';
 
 interface PostBuildModalProps {
   isOpen: boolean;
@@ -34,21 +29,19 @@ export const PostBuildModal: React.FC<PostBuildModalProps> = ({
   const [title, setTitle] = useState('');
   const [tagline, setTagline] = useState('');
   const [description, setDescription] = useState('');
+  const [category, setCategory] = useState<ProjectCategory>('Environment & Eco');
   const [stage, setStage] = useState<ExecutionStage>('Scaffolding');
-  const [selectedTags, setSelectedTags] = useState<string[]>(['Python', 'FastAPI', 'React']);
+  const [selectedTags, setSelectedTags] = useState<string[]>(['Sustainability', 'Campaign Strategy', 'React']);
   const [customTag, setCustomTag] = useState('');
   const [githubUrl, setGithubUrl] = useState('');
   const [figmaUrl, setFigmaUrl] = useState('');
-  const [backendStack, setBackendStack] = useState('Python / FastAPI / Redis');
-  const [frontendStack, setFrontendStack] = useState('React / Tailwind CSS');
-  const [dataLayer, setDataLayer] = useState('PostgreSQL + Redis Streams');
 
   // Role Slots state
   const [roles, setRoles] = useState<RoleSlot[]>([
     {
       id: 'role-1',
-      title: 'Backend / Architecture (Filled)',
-      category: 'backend',
+      title: 'Initiative Creator / Lead (Filled)',
+      category: 'campaign-lead',
       status: 'filled',
       filledBy: {
         name: currentUser.name,
@@ -56,42 +49,31 @@ export const PostBuildModal: React.FC<PostBuildModalProps> = ({
         avatar: currentUser.avatar,
         role: currentUser.primaryRole,
       },
-      commitmentHours: 10,
-      requirements: ['Python 3.11+', 'FastAPI', 'Redis'],
-      responsibilities: ['Core API endpoints', 'Database schemas'],
+      commitmentHours: 8,
+      requirements: ['Domain strategy', 'Initiative leadership'],
+      responsibilities: ['Guide project vision', 'Manage deliverables'],
     },
     {
       id: 'role-2',
-      title: 'Frontend / UI Contributor (Open)',
-      category: 'frontend',
+      title: 'UI/UX Visual Storyteller (Open)',
+      category: 'design',
       status: 'open',
       commitmentHours: 6,
-      requirements: ['React 18', 'Tailwind CSS'],
-      responsibilities: ['Interactive dashboard components', 'WebSocket streaming hooks'],
+      requirements: ['Figma', 'Responsive UI design'],
+      responsibilities: ['Create public landing page & asset deck'],
     }
   ]);
 
-  // First Good Issue state
-  const [issueTitle, setIssueTitle] = useState('Build JWT auth middleware & session cookie refresh');
+  // First Good Task state
+  const [issueTitle, setIssueTitle] = useState('Draft 1-page launch charter & target milestones');
   const [issueTime, setIssueTime] = useState(30);
-  const [issueCriteria, setIssueCriteria] = useState('1. Validate Bearer token header\n2. Return 401 on expired signature\n3. Include unit test suite');
-  const [issueFiles, setIssueFiles] = useState('src/auth/middleware.py, src/auth/jwt.py');
+  const [issueCriteria, setIssueCriteria] = useState('1. Define core target outcome\n2. Outline week-1 deliverable checklist');
 
   const handleToggleTag = (tag: string) => {
     if (selectedTags.includes(tag)) {
       setSelectedTags(selectedTags.filter(t => t !== tag));
     } else {
       setSelectedTags([...selectedTags, tag]);
-    }
-  };
-
-  const handleAddCustomTag = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && customTag.trim()) {
-      e.preventDefault();
-      if (!selectedTags.includes(customTag.trim())) {
-        setSelectedTags([...selectedTags, customTag.trim()]);
-      }
-      setCustomTag('');
     }
   };
 
@@ -102,7 +84,7 @@ export const PostBuildModal: React.FC<PostBuildModalProps> = ({
       category: 'frontend',
       status: 'open',
       commitmentHours: 5,
-      requirements: ['TypeScript', 'React'],
+      requirements: ['Skill expertise in domain'],
       responsibilities: ['Build feature components'],
     };
     setRoles([...roles, newRole]);
@@ -112,22 +94,34 @@ export const PostBuildModal: React.FC<PostBuildModalProps> = ({
     setRoles(roles.filter(r => r.id !== id));
   };
 
-  const handleUpdateRole = (id: string, field: keyof RoleSlot, value: any) => {
-    setRoles(roles.map(r => r.id === id ? { ...r, [field]: value } : r));
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !tagline.trim()) return;
+
+    const firstTask: TaskItem = {
+      id: `task-${Date.now()}`,
+      title: issueTitle || 'Initiative starter task',
+      category: 'Execution',
+      difficulty: 'Quick Win (~30m)',
+      estimatedMinutes: Number(issueTime) || 30,
+      summary: issueCriteria || 'Starter task for incoming collaborators.',
+      acceptanceCriteria: issueCriteria.split('\n').filter(Boolean),
+      status: 'open',
+      priority: 'high',
+    };
 
     const newProject: Project = {
       id: `project-${Date.now()}`,
       title,
       tagline,
       description: description || tagline,
+      category,
       stage,
-      stageProgress: stage === 'Blueprint / Spec' ? 25 : stage === 'Scaffolding' ? 50 : stage === 'Alpha / MVP Live' ? 75 : 90,
+      stageProgress: stage === 'Blueprint / Spec' ? 25 : stage === 'Scaffolding' ? 50 : 75,
       techStack: selectedTags,
+      roleSlots: roles,
+      firstGoodIssue: firstTask,
+      tasks: [firstTask],
       creator: {
         name: currentUser.name,
         handle: currentUser.handle,
@@ -143,43 +137,29 @@ export const PostBuildModal: React.FC<PostBuildModalProps> = ({
           role: currentUser.primaryRole,
         }
       ],
-      maxTeamSize: roles.length + 1,
-      stars: 1,
-      views: 12,
+      maxTeamSize: 6,
+      stars: 0,
+      views: 1,
       postedAt: 'Just now',
-      roleSlots: roles,
-      firstGoodIssue: {
-        id: `issue-${Date.now()}`,
-        title: issueTitle,
-        difficulty: issueTime <= 30 ? 'Quick Win (~30m)' : 'Moderate (~1-2h)',
-        estimatedMinutes: issueTime,
-        summary: `Entry quick-win task designed to onboard incoming collaborator within ~${issueTime} minutes.`,
-        acceptanceCriteria: issueCriteria.split('\n').filter(Boolean),
-        filesToTouch: issueFiles.split(',').map(f => f.trim()).filter(Boolean),
-        status: 'open',
-      },
+      matchScore: 95,
+      matchReason: 'Your newly created build workspace.',
+      milestones: [
+        { id: 'm-1', title: 'Initiative Charter & Roles Defined', stage: 'Blueprint / Spec', status: 'completed', owner: currentUser.name },
+        { id: 'm-2', title: 'Onboard Core Collaborators', stage: 'Scaffolding', status: 'in_progress', eta: 'Next 7 Days' }
+      ],
       architecture: {
-        summary: `Pre-configured ${stage} project with ${selectedTags.join(', ')}.`,
-        backendStack: backendStack,
-        frontendStack: frontendStack,
-        dataLayer: dataLayer,
-        infraStack: 'Docker / GitHub Actions',
+        summary: `Workspace configuration for ${category} build.`,
         githubUrl: githubUrl || undefined,
         figmaUrl: figmaUrl || undefined,
-        keyEndpoints: [
-          { method: 'POST', path: '/v1/auth/login', desc: 'User session authentication', authRequired: false },
-          { method: 'GET', path: '/v1/data/feed', desc: 'Main resource query endpoint', authRequired: true }
-        ]
       },
-      milestones: [
-        { id: 'm-1', title: 'Architecture spec & schema draft', stage: 'Blueprint / Spec', status: 'completed' },
-        { id: 'm-2', title: 'Base repo scaffolding & stack setup', stage: 'Scaffolding', status: 'completed' },
-        { id: 'm-3', title: 'Frontend UI integration & 1st Good Issue', stage: 'Scaffolding', status: 'in_progress', blockerNote: 'Awaiting co-builder' },
-        { id: 'm-4', title: 'Public Alpha launch', stage: 'Alpha / MVP Live', status: 'upcoming' }
+      workspaceResources: [
+        ...(githubUrl ? [{ id: 'res-gh', title: 'GitHub Repository', type: 'github' as const, url: githubUrl, description: 'Source code repository', addedBy: currentUser.name, addedAt: 'Just now' }] : []),
+        ...(figmaUrl ? [{ id: 'res-[#121520]', title: 'Figma Workspace', type: 'figma' as const, url: figmaUrl, description: 'Design assets board', addedBy: currentUser.name, addedAt: 'Just now' }] : [])
       ],
-      matchScore: 99,
-      matchReason: 'Created by you.',
-      repoCloneCommand: githubUrl ? `git clone ${githubUrl}` : undefined,
+      workspaceActivities: [
+        { id: 'act-post', user: currentUser.name, userAvatar: currentUser.avatar, action: 'posted build & launched workspace', target: title, timestamp: 'Just now', type: 'resource' }
+      ],
+      aiSkillRecommendations: []
     };
 
     onSubmitProject(newProject);
@@ -187,293 +167,168 @@ export const PostBuildModal: React.FC<PostBuildModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4">
-      {/* Backdrop */}
-      <div 
-        onClick={onClose}
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity" 
-      />
-
-      {/* Modal Container */}
-      <div className="relative w-full max-w-2xl bg-[#0F121D] border border-indigo-500/30 rounded-2xl shadow-2xl z-10 overflow-hidden my-8 max-h-[90vh] flex flex-col animate-scale-up">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+      <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-8">
         
         {/* Header */}
-        <div className="px-6 py-4 bg-[#131724] border-b border-border flex items-center justify-between flex-shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
-              <Plus className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-base font-bold text-white font-mono">
-                Post a Build & Onboard Co-Builders
-              </h3>
-              <p className="text-xs text-slate-400">
-                Skip vague pitch decks. Post with an execution stage, tech stack, and 1st Good Issue.
-              </p>
-            </div>
+            <FolderKanban className="w-5 h-5 text-indigo-400" />
+            <h2 className="text-base font-bold text-white">Post New Project Workspace</h2>
           </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-800/60 transition-colors"
-          >
-            <X className="w-4 h-4" />
+          <button onClick={onClose} className="p-1 rounded-lg text-slate-400 hover:text-white">
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-6 flex-1 text-xs">
+        <form onSubmit={handleSubmit} className="p-6 space-y-5 text-xs">
           
-          {/* Section 1: Basic Info */}
-          <div className="space-y-4">
-            <h4 className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">
-              1. Project Essentials
-            </h4>
+          {/* Domain Category Selector */}
+          <div>
+            <label className="block font-semibold text-slate-300 mb-1">Domain Category</label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value as ProjectCategory)}
+              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-indigo-500"
+            >
+              {allCategories.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
 
+          {/* Title & Tagline */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-slate-300 font-medium mb-1 font-sans">
-                Project Title <span className="text-rose-400">*</span>
-              </label>
+              <label className="block font-semibold text-slate-300 mb-1">Project Title *</label>
               <input
                 type="text"
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. PromptForge Studio"
-                className="w-full px-3 py-2 rounded-xl bg-[#141826] border border-border text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono"
+                placeholder="e.g., CleanOcean Action Network"
+                className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-indigo-500"
               />
             </div>
-
             <div>
-              <label className="block text-slate-300 font-medium mb-1 font-sans">
-                1-Line Elevator Pitch <span className="text-rose-400">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={tagline}
-                onChange={(e) => setTagline(e.target.value)}
-                placeholder="e.g. Local LLM prompt engineering workspace with latency heatmaps and automated eval."
-                className="w-full px-3 py-2 rounded-xl bg-[#141826] border border-border text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-sans"
-              />
-            </div>
-
-            {/* Execution Stage Selector */}
-            <div>
-              <label className="block text-slate-300 font-medium mb-1.5 font-sans">
-                Current Execution Stage <span className="text-rose-400">*</span>
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {[
-                  { stage: 'Blueprint / Spec' as ExecutionStage, label: 'Blueprint / Spec', desc: 'Wireframe/Schema done' },
-                  { stage: 'Scaffolding' as ExecutionStage, label: 'Scaffolding', desc: 'Base repo up' },
-                  { stage: 'Alpha / MVP Live' as ExecutionStage, label: 'Alpha / MVP Live', desc: 'Working prototype' },
-                  { stage: 'Ship & Distribute' as ExecutionStage, label: 'Ship & Distribute', desc: 'Ready for users' },
-                ].map((item) => (
-                  <button
-                    type="button"
-                    key={item.stage}
-                    onClick={() => setStage(item.stage)}
-                    className={`p-2.5 rounded-xl border text-left transition-all ${
-                      stage === item.stage
-                        ? 'bg-indigo-600/30 border-indigo-400 text-white font-semibold shadow-sm'
-                        : 'bg-[#121522] border-border text-slate-400 hover:text-slate-200'
-                    }`}
-                  >
-                    <div className="text-xs font-semibold">{item.label}</div>
-                    <div className="text-[10px] text-slate-500 mt-0.5">{item.desc}</div>
-                  </button>
-                ))}
-              </div>
+              <label className="block font-semibold text-slate-300 mb-1">Stage</label>
+              <select
+                value={stage}
+                onChange={(e) => setStage(e.target.value as ExecutionStage)}
+                className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-indigo-500"
+              >
+                <option value="Blueprint / Spec">Blueprint / Spec</option>
+                <option value="Scaffolding">Scaffolding</option>
+                <option value="Alpha / MVP Live">Alpha / MVP Live</option>
+                <option value="Ship & Distribute">Ship & Distribute</option>
+              </select>
             </div>
           </div>
 
-          {/* Section 2: Tech Stack Badges */}
-          <div className="space-y-3 pt-4 border-t border-border">
-            <h4 className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">
-              2. Tech Stack & Tags
-            </h4>
-            
-            <div className="flex flex-wrap gap-1.5">
-              {allTags.map((tag) => {
-                const isSelected = selectedTags.includes(tag);
+          <div>
+            <label className="block font-semibold text-slate-300 mb-1">Elevator Pitch / Tagline *</label>
+            <input
+              type="text"
+              required
+              value={tagline}
+              onChange={(e) => setTagline(e.target.value)}
+              placeholder="e.g., Localized coastal plastic cleanup mobilization app."
+              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="block font-semibold text-slate-300 mb-1">Full Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+              placeholder="Detailed background, goals, and required collaboration..."
+              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-indigo-500"
+            />
+          </div>
+
+          {/* Skill Tag Picker */}
+          <div>
+            <label className="block font-semibold text-slate-300 mb-1">Required Skills / Tech Stack</label>
+            <div className="flex flex-wrap gap-1.5 p-2 bg-slate-950 border border-slate-800 rounded-xl max-h-28 overflow-y-auto custom-scrollbar">
+              {allTags.map(tag => {
+                const isSel = selectedTags.includes(tag);
                 return (
                   <button
                     type="button"
                     key={tag}
                     onClick={() => handleToggleTag(tag)}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-mono border transition-all ${
-                      isSelected
-                        ? 'bg-indigo-600 text-white border-indigo-400'
-                        : 'bg-[#121522] text-slate-400 border-border hover:border-slate-700'
+                    className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors ${
+                      isSel ? 'bg-indigo-600 text-white font-semibold' : 'bg-slate-900 text-slate-400 hover:text-slate-200'
                     }`}
                   >
-                    {isSelected ? `✓ ${tag}` : `+ ${tag}`}
+                    {tag}
                   </button>
                 );
               })}
             </div>
-
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                value={customTag}
-                onChange={(e) => setCustomTag(e.target.value)}
-                onKeyDown={handleAddCustomTag}
-                placeholder="Type custom tag & press Enter (e.g. Svelte, Rust, Prisma)..."
-                className="w-full px-3 py-1.5 rounded-lg bg-[#141826] border border-border text-xs text-slate-200 placeholder-slate-500 font-mono"
-              />
-            </div>
           </div>
 
-          {/* Section 3: Open Role Slots */}
-          <div className="space-y-3 pt-4 border-t border-border">
+          {/* Role Slot Builder */}
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">
-                3. Explicit Role Slots (Skill Voids)
-              </h4>
+              <label className="font-semibold text-slate-300">Open Collaborator Role Slots</label>
               <button
                 type="button"
                 onClick={handleAddRole}
-                className="flex items-center gap-1 text-xs text-indigo-300 hover:text-white px-2 py-1 rounded bg-indigo-500/20 border border-indigo-500/30"
+                className="text-[11px] text-indigo-400 hover:text-indigo-300 font-semibold flex items-center gap-1"
               >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Add Slot</span>
+                <Plus className="w-3.5 h-3.5" /> Add Role Slot
               </button>
             </div>
 
-            <div className="space-y-3">
-              {roles.map((role, idx) => (
-                <div key={role.id} className="p-3.5 rounded-xl bg-[#121522] border border-border space-y-3">
-                  <div className="flex items-center justify-between gap-2">
+            <div className="space-y-2">
+              {roles.map((role) => (
+                <div key={role.id} className="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between gap-3">
+                  <div className="flex-1 grid grid-cols-2 gap-2">
                     <input
                       type="text"
                       value={role.title}
-                      onChange={(e) => handleUpdateRole(role.id, 'title', e.target.value)}
-                      placeholder="Role Title (e.g. Frontend UI Contributor)"
-                      className="flex-1 px-2.5 py-1 rounded bg-[#0A0C14] border border-border text-xs text-slate-200 font-sans"
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setRoles(roles.map(r => r.id === role.id ? { ...r, title: val } : r));
+                      }}
+                      className="px-2.5 py-1 bg-slate-900 border border-slate-800 rounded text-white text-xs"
                     />
-                    <select
-                      value={role.status}
-                      onChange={(e) => handleUpdateRole(role.id, 'status', e.target.value)}
-                      className="px-2 py-1 rounded bg-[#0A0C14] border border-border text-xs text-slate-300 font-mono"
-                    >
-                      <option value="open">⚡ Open</option>
-                      <option value="filled">✓ Filled</option>
-                    </select>
-                    <select
+                    <input
+                      type="number"
                       value={role.commitmentHours}
-                      onChange={(e) => handleUpdateRole(role.id, 'commitmentHours', Number(e.target.value))}
-                      className="px-2 py-1 rounded bg-[#0A0C14] border border-border text-xs text-slate-300 font-mono"
-                    >
-                      <option value={3}>~3 hrs/wk</option>
-                      <option value={5}>~5 hrs/wk</option>
-                      <option value={8}>~8 hrs/wk</option>
-                      <option value={12}>~12 hrs/wk</option>
-                    </select>
-                    {roles.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveRole(role.id)}
-                        className="text-slate-500 hover:text-rose-400 p-1"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    )}
+                      onChange={(e) => {
+                        const val = Number(e.target.value);
+                        setRoles(roles.map(r => r.id === role.id ? { ...r, commitmentHours: val } : r));
+                      }}
+                      className="px-2.5 py-1 bg-slate-900 border border-slate-800 rounded text-white text-xs"
+                      placeholder="h/wk"
+                    />
                   </div>
+                  {roles.length > 1 && (
+                    <button type="button" onClick={() => handleRemoveRole(role.id)} className="text-slate-500 hover:text-rose-400">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Section 4: The 1st Good Issue */}
-          <div className="space-y-3 pt-4 border-t border-border">
-            <h4 className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-              <Zap className="w-4 h-4" />
-              4. The "First Good Issue" (30-min quick-win task)
-            </h4>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="sm:col-span-2">
-                <label className="block text-slate-400 text-[11px] mb-1">Issue Title</label>
-                <input
-                  type="text"
-                  value={issueTitle}
-                  onChange={(e) => setIssueTitle(e.target.value)}
-                  placeholder="e.g. Build JWT auth middleware"
-                  className="w-full px-3 py-1.5 rounded-lg bg-[#141826] border border-border text-xs text-slate-200"
-                />
-              </div>
-              <div>
-                <label className="block text-slate-400 text-[11px] mb-1">Estimated Minutes</label>
-                <input
-                  type="number"
-                  value={issueTime}
-                  onChange={(e) => setIssueTime(Number(e.target.value))}
-                  className="w-full px-3 py-1.5 rounded-lg bg-[#141826] border border-border text-xs text-slate-200 font-mono"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-slate-400 text-[11px] mb-1">Acceptance Criteria (1 per line)</label>
-              <textarea
-                value={issueCriteria}
-                onChange={(e) => setIssueCriteria(e.target.value)}
-                rows={2}
-                className="w-full p-2.5 rounded-lg bg-[#141826] border border-border text-xs text-slate-200"
-              />
-            </div>
-          </div>
-
-          {/* Section 5: Repos & Links */}
-          <div className="space-y-3 pt-4 border-t border-border">
-            <h4 className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">
-              5. Prototype Links & Repo
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-slate-400 text-[11px] mb-1">GitHub Repo URL</label>
-                <input
-                  type="url"
-                  value={githubUrl}
-                  onChange={(e) => setGithubUrl(e.target.value)}
-                  placeholder="https://github.com/org/repo"
-                  className="w-full px-3 py-1.5 rounded-lg bg-[#141826] border border-border text-xs text-slate-200 font-mono"
-                />
-              </div>
-              <div>
-                <label className="block text-slate-400 text-[11px] mb-1">Figma / Spec URL</label>
-                <input
-                  type="url"
-                  value={figmaUrl}
-                  onChange={(e) => setFigmaUrl(e.target.value)}
-                  placeholder="https://figma.com/file/..."
-                  className="w-full px-3 py-1.5 rounded-lg bg-[#141826] border border-border text-xs text-slate-200 font-mono"
-                />
-              </div>
-            </div>
-          </div>
-
           {/* Submit Action */}
-          <div className="pt-4 border-t border-border flex items-center justify-end gap-3 flex-shrink-0">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white"
-            >
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+            <button type="button" onClick={onClose} className="px-4 py-2 text-slate-400 hover:text-white font-medium">
               Cancel
             </button>
-            <button
-              type="submit"
-              className="flex items-center gap-1.5 px-5 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 shadow-lg shadow-indigo-600/30 transition-all active:scale-95"
-            >
-              <Check className="w-4 h-4" />
-              <span>Publish Build Docket</span>
+            <button type="submit" className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/20">
+              Create Project & Workspace
             </button>
           </div>
 
         </form>
-
       </div>
     </div>
   );

@@ -1,18 +1,21 @@
 import React from 'react';
 import { 
-  Layers, 
-  Tag, 
-  Sparkles, 
-  Check, 
   X, 
   Bookmark, 
-  UserCheck, 
-  Filter
+  TreePine, 
+  Megaphone, 
+  Code2, 
+  Heart, 
+  Palette, 
+  Briefcase,
+  Layers
 } from 'lucide-react';
-import { ExecutionStage } from '../types';
+import { ExecutionStage, ProjectCategory } from '../types';
 import { getStageBadgeStyle } from '../utils/colors';
 
 interface FilterBarProps {
+  selectedCategory: ProjectCategory | 'All';
+  onSelectCategory: (category: ProjectCategory | 'All') => void;
   selectedStage: ExecutionStage | 'All';
   onSelectStage: (stage: ExecutionStage | 'All') => void;
   selectedTags: string[];
@@ -28,6 +31,16 @@ interface FilterBarProps {
   hasActiveFilters: boolean;
 }
 
+const categories: (ProjectCategory | 'All')[] = [
+  'All',
+  'Environment & Eco',
+  'Campaign & Marketing',
+  'Tech & AI',
+  'Community & Social',
+  'Creative & Design',
+  'Business & Strategy'
+];
+
 const stages: (ExecutionStage | 'All')[] = [
   'All',
   'Blueprint / Spec',
@@ -37,6 +50,8 @@ const stages: (ExecutionStage | 'All')[] = [
 ];
 
 export const FilterBar: React.FC<FilterBarProps> = ({
+  selectedCategory,
+  onSelectCategory,
   selectedStage,
   onSelectStage,
   selectedTags,
@@ -51,11 +66,49 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   onClearFilters,
   hasActiveFilters,
 }) => {
+
+  const getCategoryIcon = (cat: string) => {
+    switch (cat) {
+      case 'Environment & Eco': return TreePine;
+      case 'Campaign & Marketing': return Megaphone;
+      case 'Tech & AI': return Code2;
+      case 'Community & Social': return Heart;
+      case 'Creative & Design': return Palette;
+      case 'Business & Strategy': return Briefcase;
+      default: return Layers;
+    }
+  };
+
   return (
     <div className="space-y-3.5 mb-6">
       
-      {/* Top Filter Level: Execution Stage Pills */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-1 border-b border-border/60">
+      {/* Category Pills (Primary Domain Filter) */}
+      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+        <span className="text-xs font-mono text-slate-400 font-semibold mr-1 flex-shrink-0">
+          DOMAIN:
+        </span>
+        {categories.map((cat) => {
+          const isSelected = selectedCategory === cat;
+          const Icon = getCategoryIcon(cat);
+          return (
+            <button
+              key={cat}
+              onClick={() => onSelectCategory(cat)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex-shrink-0 border ${
+                isSelected
+                  ? 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/25'
+                  : 'bg-[#121520] text-slate-400 hover:text-slate-200 hover:bg-[#181D2C] border-slate-800'
+              }`}
+            >
+              <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-indigo-400'}`} />
+              <span>{cat === 'All' ? 'All Domains' : cat}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Execution Stage Pills & Quick Toggles */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-1 border-b border-slate-800">
         
         {/* Stage Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
@@ -71,10 +124,10 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                 <button
                   key={stage}
                   onClick={() => onSelectStage('All')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex-shrink-0 ${
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium transition-all flex-shrink-0 ${
                     isSelected
                       ? 'bg-slate-200 text-slate-950 font-semibold shadow-sm'
-                      : 'bg-[#121520] text-slate-400 hover:text-slate-200 hover:bg-[#181D2C] border border-border'
+                      : 'bg-[#121520] text-slate-400 hover:text-slate-200 border border-slate-800'
                   }`}
                 >
                   <span>All Stages</span>
@@ -93,10 +146,10 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               <button
                 key={stage}
                 onClick={() => onSelectStage(stage)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex-shrink-0 border ${
+                className={`flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-medium transition-all flex-shrink-0 border ${
                   isSelected
                     ? `${style.bg} ${style.text} ${style.border} ring-1 ring-offset-1 ring-offset-[#090A0F] ring-current font-semibold`
-                    : 'bg-[#121520] text-slate-400 hover:text-slate-200 border-border hover:border-slate-700'
+                    : 'bg-[#121520] text-slate-400 hover:text-slate-200 border-slate-800 hover:border-slate-700'
                 }`}
               >
                 <span className={`w-2 h-2 rounded-full ${style.dot}`} />
@@ -116,11 +169,11 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition-all ${
               openRolesOnly
                 ? 'bg-amber-500/15 text-amber-300 border-amber-500/40'
-                : 'bg-[#121520] text-slate-400 border-border hover:border-slate-700 hover:text-slate-200'
+                : 'bg-[#121520] text-slate-400 border-slate-800 hover:border-slate-700 hover:text-slate-200'
             }`}
           >
             <span className="text-amber-400">⚡</span>
-            <span>Has Open Slots</span>
+            <span>Open Skill Slots</span>
           </button>
 
           <button
@@ -128,7 +181,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition-all ${
               bookmarkedOnly
                 ? 'bg-indigo-500/15 text-indigo-300 border-indigo-500/40'
-                : 'bg-[#121520] text-slate-400 border-border hover:border-slate-700 hover:text-slate-200'
+                : 'bg-[#121520] text-slate-400 border-slate-800 hover:border-slate-700 hover:text-slate-200'
             }`}
           >
             <Bookmark className="w-3 h-3 text-indigo-400" />
@@ -149,10 +202,10 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
       </div>
 
-      {/* Bottom Filter Level: Tech Stack Chips Multi-select */}
+      {/* Tech & Skill Stack Chips */}
       <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
         <span className="text-[11px] font-mono text-slate-500 mr-1 hidden sm:inline flex-shrink-0">
-          STACK:
+          SKILL / STACK:
         </span>
         {availableTags.map((tag) => {
           const isSelected = selectedTags.includes(tag);
@@ -163,7 +216,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition-all flex-shrink-0 border ${
                 isSelected
                   ? 'bg-indigo-600/30 text-indigo-300 border-indigo-400/60 font-semibold shadow-sm'
-                  : 'bg-[#10131D] text-slate-400 border-border/80 hover:border-slate-600 hover:text-slate-200'
+                  : 'bg-[#10131D] text-slate-400 border-slate-800 hover:border-slate-600 hover:text-slate-200'
               }`}
             >
               {isSelected ? `✓ ${tag}` : tag}
