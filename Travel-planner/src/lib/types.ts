@@ -20,6 +20,7 @@ export interface IntentSchema {
   vibe_tags: string[];
   pacing: 'relaxed' | 'moderate' | 'intense';
   time_slots_per_day: ('morning' | 'afternoon' | 'evening')[];
+  accommodation_requested: boolean;
 }
 
 export interface TransitInfo {
@@ -45,6 +46,21 @@ export interface DaySchedule {
   };
 }
 
+export interface AccommodationHub {
+  suburb: string;
+  recommended_streets: string[];
+  lat: number;
+  lng: number;
+  avg_distance_to_pois_km: number;
+  price_estimates: {
+    budget: number;
+    mid_range: number;
+    luxury: number;
+  };
+  reasoning: string;
+  search_keywords: string[];
+}
+
 export interface PipelineStageInfo {
   stage: number;
   title: string;
@@ -57,6 +73,7 @@ export interface PlanResult {
   intent: IntentSchema;
   candidate_count: number;
   schedule: DaySchedule[];
+  accommodation?: AccommodationHub;
   narrative: string;
   pipeline_stages?: PipelineStageInfo[];
 }

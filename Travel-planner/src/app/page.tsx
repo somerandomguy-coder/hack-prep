@@ -6,9 +6,9 @@ import { PlanResult } from '@/lib/types';
 import { PromptInput } from '@/components/PromptInput';
 import { PipelineVisualizer } from '@/components/PipelineVisualizer';
 import { ItineraryView } from '@/components/ItineraryView';
+import { AccommodationView } from '@/components/AccommodationView';
 import { NarrativeView } from '@/components/NarrativeView';
 
-// Dynamically import MapVisualizer to disable SSR for Leaflet (window object safety)
 const MapVisualizer = dynamic(
   () => import('@/components/MapVisualizer').then((mod) => mod.MapVisualizer),
   { ssr: false }
@@ -17,6 +17,7 @@ const MapVisualizer = dynamic(
 export default function HomePage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [result, setResult] = useState<PlanResult | null>(null);
+  const [manualShowStay, setManualShowStay] = useState<boolean>(false);
 
   const fetchPlan = async (promptText: string) => {
     setIsLoading(true);
@@ -29,6 +30,7 @@ export default function HomePage() {
       const data: PlanResult = await res.json();
       if (data.success) {
         setResult(data);
+        setManualShowStay(false);
       }
     } catch (err) {
       console.error('Failed to generate plan:', err);
@@ -37,10 +39,13 @@ export default function HomePage() {
     }
   };
 
-  // Run initial default prompt on load
   useEffect(() => {
     fetchPlan("3 days in Sydney, budget around $50/day, love specialty coffee and coastal walks, relaxed pace");
   }, []);
+
+  const showAccommodation = Boolean(
+    result?.accommodation && (result.intent.accommodation_requested || manualShowStay)
+  );
 
   return (
     <div>
@@ -48,11 +53,27 @@ export default function HomePage() {
 
       {result && (
         <>
+          <div className="toolbar-row">
+            <button
+              type="button"
+              className={`toggle-stay-btn ${showAccommodation ? 'active' : ''}`}
+              onClick={() => setManualShowStay(!manualShowStay)}
+            >
+              🏨 {showAccommodation ? 'Hide Optimal Stay Hub' : 'Show Optimal Stay Hub & Heatmap'}
+            </button>
+          </div>
+
           <PipelineVisualizer stages={result.pipeline_stages} />
 
           <ItineraryView schedule={result.schedule} />
 
-          <MapVisualizer schedule={result.schedule} />
+          {showAccommodation && <AccommodationView accommodation={result.accommodation} />}
+
+          <MapVisualizer
+            schedule={result.schedule}
+            accommodation={result.accommodation}
+            showAccommodationOverlay={showAccommodation}
+          />
 
           <NarrativeView narrative={result.narrative} />
         </>

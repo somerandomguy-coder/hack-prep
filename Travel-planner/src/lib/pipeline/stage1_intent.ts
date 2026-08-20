@@ -72,12 +72,21 @@ export function parseIntent(prompt: string): IntentSchema {
     pacing = 'relaxed';
   }
 
+  // 6. Detect Accommodation Intent
+  const accommodationKeywords = [
+    'hotel', 'stay', 'accommodation', 'where to live', 'airbnb', 'lodging',
+    'hostel', 'resort', 'where to stay', 'place to stay', 'living'
+  ];
+
+  const accommodation_requested = accommodationKeywords.some(keyword => text.includes(keyword));
+
   return {
     city,
     days,
     daily_budget_max,
     vibe_tags: extractedTags,
     pacing,
-    time_slots_per_day: ['morning', 'afternoon', 'evening']
+    time_slots_per_day: ['morning', 'afternoon', 'evening'],
+    accommodation_requested
   };
 }

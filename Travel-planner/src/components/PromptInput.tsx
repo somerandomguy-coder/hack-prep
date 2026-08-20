@@ -9,8 +9,8 @@ interface PromptInputProps {
 
 const SAMPLE_PROMPTS = [
   "3 days in Sydney, budget around $50/day, love specialty coffee and coastal walks, relaxed pace",
-  "2 days in Sydney under $40/day, focus on historic sights, harbor ferry and local markets",
-  "1 day in Sydney, iconic landmarks, botanical garden and fine evening dining"
+  "3 days in Sydney, budget $60/day, coastal walks & fine dining, recommend best hotel location",
+  "2 days in Sydney under $40/day, focus on historic sights, harbor ferry and local markets"
 ];
 
 export const PromptInput: React.FC<PromptInputProps> = ({ onSubmit, isLoading }) => {
@@ -30,7 +30,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onSubmit, isLoading })
           <span className="icon">🚀</span> Hybrid Deterministic Travel Planner
         </h2>
         <p className="prompt-subtitle">
-          Natural Language Intent Parsing + Deterministic SQL Filtering & Spatial Routing
+          Natural Language Intent Parsing + Deterministic SQL Filtering, Spatial Routing & Accommodation Suggester
         </p>
       </div>
 
@@ -40,7 +40,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onSubmit, isLoading })
             className="prompt-textarea"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder="e.g., 3 days in Sydney, budget around $50/day, love specialty coffee and coastal walks..."
+            placeholder="e.g., 3 days in Sydney, budget around $50/day, love specialty coffee and coastal walks, suggest hotel location..."
             rows={3}
             disabled={isLoading}
           />
@@ -56,7 +56,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onSubmit, isLoading })
               onClick={() => setPrompt(p)}
               disabled={isLoading}
             >
-              {p.slice(0, 38)}...
+              {p.slice(0, 42)}...
             </button>
           ))}
         </div>
@@ -67,7 +67,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onSubmit, isLoading })
               <span className="spinner"></span> Running 4-Stage Pipeline...
             </span>
           ) : (
-            '✨ Generate Verified Itinerary'
+            '✨ Generate Verified Itinerary & Stay Hub'
           )}
         </button>
       </form>

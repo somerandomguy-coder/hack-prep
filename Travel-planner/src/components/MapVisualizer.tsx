@@ -1,28 +1,33 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { DaySchedule } from '@/lib/types';
+import { DaySchedule, AccommodationHub } from '@/lib/types';
 import 'leaflet/dist/leaflet.css';
 
 interface MapVisualizerProps {
   schedule: DaySchedule[];
+  accommodation?: AccommodationHub;
+  showAccommodationOverlay?: boolean;
 }
 
 const DAY_COLORS = ['#00f2fe', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6'];
 
-export const MapVisualizer: React.FC<MapVisualizerProps> = ({ schedule }) => {
+export const MapVisualizer: React.FC<MapVisualizerProps> = ({
+  schedule,
+  accommodation,
+  showAccommodationOverlay = true
+}) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletInstance = useRef<any>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined' || !mapRef.current) return;
 
-    // Dynamically import Leaflet inside browser environment
     import('leaflet').then((L) => {
       if (!leafletInstance.current) {
         const map = L.map(mapRef.current!).setView([-33.8688, 151.2093], 12);
 
-        // CartoDB Dark Matter tile layer for sleek dark theme matching our UI
+        // CartoDB Dark Matter tile layer for dark glassmorphic styling
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
           subdomains: 'abcd',
@@ -34,15 +39,48 @@ export const MapVisualizer: React.FC<MapVisualizerProps> = ({ schedule }) => {
 
       const map = leafletInstance.current;
 
-      // Clear previous markers & lines
+      // Clear previous layers
       map.eachLayer((layer: any) => {
-        if (layer instanceof L.Marker || layer instanceof L.Polyline || layer instanceof L.CircleMarker) {
+        if (layer instanceof L.Marker || layer instanceof L.Polyline || layer instanceof L.CircleMarker || layer instanceof L.Circle) {
           map.removeLayer(layer);
         }
       });
 
       const bounds: [number, number][] = [];
 
+      // 1. Draw Optimal Accommodation Heatmap Ring & Marker if enabled
+      if (accommodation && showAccommodationOverlay) {
+        bounds.push([accommodation.lat, accommodation.lng]);
+
+        // Glowing proximity ring
+        L.circle([accommodation.lat, accommodation.lng], {
+          radius: 1200,
+          color: '#00f2fe',
+          weight: 2,
+          fillColor: '#00f2fe',
+          fillOpacity: 0.2
+        }).addTo(map);
+
+        // Hotel Icon Marker
+        const hotelIcon = L.divIcon({
+          html: `<div style="font-size: 24px; text-shadow: 0 0 10px #00f2fe;">🏨</div>`,
+          className: 'hotel-div-icon',
+          iconSize: [30, 30],
+          iconAnchor: [15, 15]
+        });
+
+        const hotelMarker = L.marker([accommodation.lat, accommodation.lng], { icon: hotelIcon }).addTo(map);
+        hotelMarker.bindPopup(`
+          <div style="color: #0b0f19; font-family: sans-serif; font-size: 13px; line-height: 1.4;">
+            <strong style="color: #00f2fe; font-size: 14px;">🏨 Optimal Stay Hub</strong><br/>
+            <b>${accommodation.suburb}</b><br/>
+            <span>Avg ${accommodation.avg_distance_to_pois_km} km to all spots</span><br/>
+            <small>Streets: ${accommodation.recommended_streets.join(', ')}</small>
+          </div>
+        `);
+      }
+
+      // 2. Draw Itinerary Daily Route Paths and POIs
       schedule.forEach((daySchedule) => {
         const color = DAY_COLORS[(daySchedule.day - 1) % DAY_COLORS.length];
         const slots = daySchedule.slots;
@@ -54,7 +92,6 @@ export const MapVisualizer: React.FC<MapVisualizerProps> = ({ schedule }) => {
 
         const latLngs: [number, number][] = points.map(p => [p.lat, p.lng]);
 
-        // Add route line connecting daily POIs
         if (latLngs.length > 1) {
           L.polyline(latLngs, {
             color: color,
@@ -64,7 +101,6 @@ export const MapVisualizer: React.FC<MapVisualizerProps> = ({ schedule }) => {
           }).addTo(map);
         }
 
-        // Add Circle Markers for each POI
         points.forEach((pt) => {
           bounds.push([pt.lat, pt.lng]);
 
@@ -91,12 +127,12 @@ export const MapVisualizer: React.FC<MapVisualizerProps> = ({ schedule }) => {
         map.fitBounds(L.latLngBounds(bounds), { padding: [50, 50] });
       }
     });
-  }, [schedule]);
+  }, [schedule, accommodation, showAccommodationOverlay]);
 
   return (
     <div className="map-container card-glass">
       <h3 className="section-title">
-        <span className="icon">🗺️</span> Interactive OpenStreetMap & Spatial Route Visualizer
+        <span className="icon">🗺️</span> Interactive Spatial Route & Accommodation Heatmap
       </h3>
 
       <div
@@ -105,6 +141,12 @@ export const MapVisualizer: React.FC<MapVisualizerProps> = ({ schedule }) => {
       />
 
       <div className="map-legend">
+        {accommodation && showAccommodationOverlay && (
+          <div className="legend-item">
+            <span className="legend-color" style={{ backgroundColor: '#00f2fe', boxShadow: '0 0 8px #00f2fe' }}></span>
+            <span>🏨 Optimal Stay Hub ({accommodation.suburb})</span>
+          </div>
+        )}
         {schedule.map((d) => (
           <div key={d.day} className="legend-item">
             <span

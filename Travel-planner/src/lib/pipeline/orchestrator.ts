@@ -1,7 +1,7 @@
 import { PlanResult, PipelineStageInfo } from '../types';
 import { parseIntent } from './stage1_intent';
 import { selectCandidates } from './stage2_filter';
-import { buildSchedule } from './stage3_router';
+import { buildSchedule, findOptimalAccommodationHub } from './stage3_router';
 import { synthesizeNarrative } from './stage4_narrative';
 
 export function runPipeline(prompt: string): PlanResult {
@@ -12,7 +12,7 @@ export function runPipeline(prompt: string): PlanResult {
   pipelineStages.push({
     stage: 1,
     title: 'Stage 1: Intent Parsing (LLM Stage 1)',
-    details: `Extracted city="${intent.city}", days=${intent.days}, daily_budget_max=$${intent.daily_budget_max}, pacing="${intent.pacing}"`,
+    details: `Extracted city="${intent.city}", days=${intent.days}, daily_budget_max=$${intent.daily_budget_max}, pacing="${intent.pacing}", accommodation_requested=${intent.accommodation_requested}`,
     data: intent
   });
 
@@ -28,14 +28,21 @@ export function runPipeline(prompt: string): PlanResult {
     }
   });
 
-  // Stage 3: Spatial Routing & Scheduler Algorithm
+  // Stage 3: Spatial Routing & Budget Scheduler Algorithm
   const schedule = buildSchedule(candidates, intent);
   const totalTripDist = schedule.reduce((acc, d) => acc + d.total_distance_km, 0);
+
+  // Compute Optimal Accommodation Hub
+  const accommodation = findOptimalAccommodationHub(schedule);
+
   pipelineStages.push({
     stage: 3,
     title: 'Stage 3: Spatial Routing & Budget Scheduler (Algorithm Stage)',
-    details: `Grouped into ${schedule.length} daily geographic clusters using Haversine distance matrix. Enforced budget ceiling (all days <= $${intent.daily_budget_max}). Total trip distance: ${totalTripDist.toFixed(1)} km.`,
-    data: schedule
+    details: `Grouped into ${schedule.length} daily geographic clusters using Haversine distance matrix. Enforced budget ceiling (all days <= $${intent.daily_budget_max}). Total trip distance: ${totalTripDist.toFixed(1)} km. Optimal stay hub: ${accommodation.suburb} (Avg ${accommodation.avg_distance_to_pois_km} km to all spots).`,
+    data: {
+      schedule,
+      accommodation_hub: accommodation
+    }
   });
 
   // Stage 4: Narrative Synthesizer (LLM Stage 2)
@@ -52,6 +59,7 @@ export function runPipeline(prompt: string): PlanResult {
     intent,
     candidate_count: candidates.length,
     schedule,
+    accommodation,
     narrative,
     pipeline_stages: pipelineStages
   };
