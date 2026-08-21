@@ -31,6 +31,7 @@ from core.imagery import fetch_satellite_image
 from core.segmentation import get_segmenter
 from core.solar_math import calculate_solar_capacity
 from core.visualization import annotate_solar_feasibility
+from core.depth_estimation import estimate_depth_map, filter_mask_with_depth
 
 console = Console()
 
@@ -39,6 +40,7 @@ def run_solar_estimator(
     zoom: int = 19,
     segmenter_method: str = "opencv",
     output_path: str = "output_annotated.png",
+    depth_output_path: str = "depth_map.png",
     as_json: bool = False
 ):
     if not as_json:
@@ -57,17 +59,26 @@ def run_solar_estimator(
         console.print(f"[bold cyan]Fetching satellite tile...[/bold cyan] (lat: {lat:.4f}, lng: {lng:.4f}, z: {zoom})")
     tile_image = fetch_satellite_image(lat, lng, zoom=zoom, size=600)
     
-    # 4. Roof Segmentation
+    # 4. Monocular Pseudo-LiDAR Depth Estimation
     if not as_json:
-        console.print(f"[bold cyan]Segmenting rooftop using:[/bold cyan] {segmenter_method.upper()}")
+        console.print(f"[bold cyan]Generating Pseudo-LiDAR Depth Elevation Map...[/bold cyan]")
+    depth_normalized, depth_visual = estimate_depth_map(tile_image)
+    depth_visual.save(depth_output_path)
+    
+    # 5. Roof Segmentation & Depth Elevation Filter
+    if not as_json:
+        console.print(f"[bold cyan]Segmenting rooftop using:[/bold cyan] {segmenter_method.upper()} + Depth Height Filter")
     segmenter = get_segmenter(segmenter_method)
-    mask = segmenter(tile_image)
+    raw_mask = segmenter(tile_image)
+    
+    # Refine mask by filtering out low-elevation ground / backyard pixels
+    mask = filter_mask_with_depth(raw_mask, depth_normalized, threshold_percentile=35.0)
     mask_pixel_count = int(np.sum(mask > 0))
     
-    # 5. Solar Capacity Math
+    # 6. Solar Capacity Math
     estimate = calculate_solar_capacity(mask_pixel_count, pixel_area)
     
-    # 6. Visual Annotation
+    # 7. Visual Annotation
     annotated = annotate_solar_feasibility(
         base_image=tile_image,
         mask=mask,
@@ -90,7 +101,8 @@ def run_solar_estimator(
         "usable_roof_area_m2": estimate.usable_roof_area,
         "max_400w_panels": estimate.max_panels,
         "system_capacity_kw": estimate.system_capacity_kw,
-        "output_image": output_path
+        "output_image": output_path,
+        "depth_map_image": depth_output_path
     }
     
     if as_json:
@@ -114,6 +126,7 @@ def run_solar_estimator(
         
         console.print(table)
         console.print(f"\n[bold green][OK] Visual verification image saved to:[/bold green] [yellow]{output_path}[/yellow]")
+        console.print(f"[bold green][OK] Pseudo-LiDAR depth elevation map saved to:[/bold green] [yellow]{depth_output_path}[/yellow]")
         
     return results
 
@@ -132,6 +145,7 @@ def main():
     parser.add_argument("--zoom", type=int, default=19, help="Satellite zoom level (default: 19)")
     parser.add_argument("--segmenter", type=str, choices=["opencv", "gemini"], default="opencv", help="Roof segmentation method")
     parser.add_argument("--output", type=str, default="output_annotated.png", help="Output annotated image path")
+    parser.add_argument("--depth-output", type=str, default="depth_map.png", help="Output depth map image path")
     parser.add_argument("--json", action="store_true", help="Output results in JSON format")
     
     args = parser.parse_args()
@@ -152,6 +166,7 @@ def main():
             zoom=args.zoom,
             segmenter_method=args.segmenter,
             output_path=args.output,
+            depth_output_path=args.depth_output,
             as_json=args.json
         )
     except Exception as e:
