@@ -123,9 +123,12 @@ def main():
         "address",
         type=str,
         nargs="?",
-        default="University of Wollongong, Northfields Ave, Wollongong NSW 2522, Australia",
-        help="Target street address (default: University of Wollongong, Australia)"
+        default=None,
+        help="Target street address or lat,lng coordinates (default: University of Wollongong, Australia)"
     )
+    parser.add_argument("--coords", type=str, default=None, help="Direct lat,lng coordinates (e.g. '-33.72951, 150.99442')")
+    parser.add_argument("--lat", type=float, default=None, help="Direct latitude coordinate")
+    parser.add_argument("--lng", type=float, default=None, help="Direct longitude coordinate")
     parser.add_argument("--zoom", type=int, default=19, help="Satellite zoom level (default: 19)")
     parser.add_argument("--segmenter", type=str, choices=["opencv", "gemini"], default="opencv", help="Roof segmentation method")
     parser.add_argument("--output", type=str, default="output_annotated.png", help="Output annotated image path")
@@ -133,9 +136,19 @@ def main():
     
     args = parser.parse_args()
     
+    # Determine input query
+    if args.lat is not None and args.lng is not None:
+        target_query = f"{args.lat}, {args.lng}"
+    elif args.coords:
+        target_query = args.coords
+    elif args.address:
+        target_query = args.address
+    else:
+        target_query = "University of Wollongong, Northfields Ave, Wollongong NSW 2522, Australia"
+    
     try:
         run_solar_estimator(
-            address=args.address,
+            address=target_query,
             zoom=args.zoom,
             segmenter_method=args.segmenter,
             output_path=args.output,
