@@ -1,23 +1,16 @@
-import os
 import math
-import io
 import requests
+import io
 from PIL import Image
-from core.resolution import calculate_ground_resolution
 
 def latlng_to_global_pixels(lat: float, lng: float, zoom: int) -> tuple[float, float]:
-    """Converts lat/lng (EPSG:4326) to global pixel coordinates at given Web Mercator zoom level."""
     n = 2 ** zoom
     rad_lat = math.radians(lat)
     px = ((lng + 180.0) / 360.0) * n * 256.0
     py = (1.0 - math.log(math.tan(rad_lat) + (1.0 / math.cos(rad_lat))) / math.pi) / 2.0 * n * 256.0
     return px, py
 
-def fetch_esri_satellite_tile(lat: float, lng: float, zoom: int = 19, size: int = 600) -> Image.Image:
-    """
-    Fetches satellite imagery from Esri World Imagery tile service without needing API keys.
-    Stitches standard XYZ tiles and crops a centered (size x size) region around (lat, lng).
-    """
+def fetch_esri_tile_grid(lat: float, lng: float, zoom: int = 19, size: int = 600) -> Image.Image:
     center_px_x, center_px_y = latlng_to_global_pixels(lat, lng, zoom)
     
     half_size = size / 2.0
@@ -51,27 +44,15 @@ def fetch_esri_satellite_tile(lat: float, lng: float, zoom: int = 19, size: int 
             pos_y = (ty - tile_y1) * 256
             canvas.paste(tile_img, (pos_x, pos_y))
             
-    # Crop exact centered (size x size) bounding area
+    # Crop exact 600x600 area
     offset_x = int(round(crop_x1 - (tile_x1 * 256)))
     offset_y = int(round(crop_y1 - (tile_y1 * 256)))
     
     cropped = canvas.crop((offset_x, offset_y, offset_x + size, offset_y + size))
     return cropped
 
-def fetch_mapbox_satellite_tile(lat: float, lng: float, api_key: str, zoom: int = 19, size: int = 600) -> Image.Image:
-    """Fetches satellite imagery from Mapbox Static API."""
-    url = f"https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/{lng},{lat},{zoom},0/{size}x{size}?access_token={api_key}"
-    resp = requests.get(url, timeout=15)
-    resp.raise_for_status()
-    return Image.open(io.BytesIO(resp.content)).convert("RGB")
-
-def fetch_satellite_image(lat: float, lng: float, zoom: int = 19, size: int = 600) -> Image.Image:
-    """Fetches satellite imagery with automatic fallback to zero-key Esri server."""
-    mapbox_key = os.getenv("MAPBOX_API_KEY")
-    if mapbox_key:
-        try:
-            return fetch_mapbox_satellite_tile(lat, lng, mapbox_key, zoom, size)
-        except Exception as e:
-            print(f"[Warning] Mapbox fetch failed ({e}), falling back to Esri World Imagery.")
-            
-    return fetch_esri_satellite_tile(lat, lng, zoom, size)
+# Test Wollongong
+lat, lng = -34.4081, 150.8784
+img = fetch_esri_tile_grid(lat, lng, zoom=19, size=600)
+print(f"Successfully fetched stitched image for Wollongong! Size: {img.size}")
+img.save("scratch/wollongong_tile.png")

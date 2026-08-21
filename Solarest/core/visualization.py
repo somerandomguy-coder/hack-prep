@@ -44,10 +44,15 @@ def annotate_solar_feasibility(
         width=2
     )
     
+    lat_dir = "S" if lat < 0 else "N"
+    lng_dir = "W" if lng < 0 else "E"
+    lat_str = f"{abs(lat):.4f} {lat_dir}"
+    lng_str = f"{abs(lng):.4f} {lng_dir}"
+    
     # Text lines
     lines = [
         f"SOLAR FEASIBILITY ESTIMATE",
-        f"Location: {lat:.4f} N, {lng:.4f} W",
+        f"Location: {lat_str}, {lng_str}",
         f"Ground Res: {resolution:.3f} m/px (z=19)",
         f"Est. Roof Area: {estimate.raw_roof_area} m2",
         f"Usable Solar Area: {estimate.usable_roof_area} m2",

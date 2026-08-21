@@ -100,8 +100,12 @@ def run_solar_estimator(
         table.add_column("Parameter / Metric", style="cyan")
         table.add_column("Value", style="bold green")
         
+        lat_dir = "S" if lat < 0 else "N"
+        lng_dir = "W" if lng < 0 else "E"
+        coord_str = f"{abs(lat):.5f} {lat_dir}, {abs(lng):.5f} {lng_dir}"
+
         table.add_row("Full Address", full_address)
-        table.add_row("Coordinates", f"{lat:.5f} N, {lng:.5f} W")
+        table.add_row("Coordinates", coord_str)
         table.add_row("Ground Resolution", f"{res:.3f} m / pixel")
         table.add_row("Raw Roof Area", f"{estimate.raw_roof_area:.2f} m2")
         table.add_row("Usable Solar Area (65%)", f"{estimate.usable_roof_area:.2f} m2")
@@ -115,7 +119,13 @@ def run_solar_estimator(
 
 def main():
     parser = argparse.ArgumentParser(description="Solar Feasibility & Rooftop Area Estimator Prototype")
-    parser.add_argument("address", type=str, help="Target street address (e.g. '1600 Amphitheatre Pkwy, Mountain View, CA')")
+    parser.add_argument(
+        "address",
+        type=str,
+        nargs="?",
+        default="University of Wollongong, Northfields Ave, Wollongong NSW 2522, Australia",
+        help="Target street address (default: University of Wollongong, Australia)"
+    )
     parser.add_argument("--zoom", type=int, default=19, help="Satellite zoom level (default: 19)")
     parser.add_argument("--segmenter", type=str, choices=["opencv", "gemini"], default="opencv", help="Roof segmentation method")
     parser.add_argument("--output", type=str, default="output_annotated.png", help="Output annotated image path")

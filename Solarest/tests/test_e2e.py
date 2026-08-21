@@ -5,7 +5,7 @@ from solar_estimator import run_solar_estimator
 def test_run_solar_estimator_e2e(tmp_path):
     out_img = str(tmp_path / "test_output.png")
     results = run_solar_estimator(
-        address="1600 Amphitheatre Pkwy, Mountain View, CA",
+        address="University of Wollongong, Northfields Ave, Wollongong NSW 2522, Australia",
         zoom=19,
         segmenter_method="opencv",
         output_path=out_img,
